@@ -1,6 +1,7 @@
 package com.jeremias.paddlechampion.entity;
 
 import com.jeremias.paddlechampion.enumeration.Inscription;
+import com.jeremias.paddlechampion.model.Match;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -11,6 +12,7 @@ import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import java.io.Serializable;
+import java.util.List;
 import java.util.Set;
 import lombok.Getter;
 import lombok.Setter;
@@ -36,6 +38,8 @@ public class TournamentEntity implements Serializable {
 
   @Column(name = "INSCRIPTION")
   private Inscription inscriptionStatus;
+
+  private List<Match> matches;
 
   @ManyToMany(mappedBy = "tournaments")
   Set<TeamEntity> teams;
