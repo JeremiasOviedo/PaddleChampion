@@ -3,6 +3,7 @@ package com.jeremias.paddlechampion.entity;
 import jakarta.persistence.*;
 import java.io.Serializable;
 import java.sql.Date;
+import java.util.Set;
 import lombok.Data;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.SQLDelete;
@@ -21,6 +22,7 @@ public class UserEntity implements Serializable {
 
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
+  @Column(name = "USER_ID")
   private Long userId;
 
   @Column(name = "FIRST_NAME", nullable = false)
@@ -42,6 +44,17 @@ public class UserEntity implements Serializable {
   @Column(name = "UPDATE_DATE")
   @UpdateTimestamp
   private Date updateDate;
+
+  @Column(name = "CATEGORY", nullable = false)
+  private Integer category;
+
+  @ManyToMany
+  @JoinTable(
+      name = "PLAYER_TEAM",
+      joinColumns = @JoinColumn(name = "USER_ID"),
+      inverseJoinColumns = @JoinColumn(name = "TEAM_ID")
+  )
+  Set<TeamEntity> teams;
 
 
 }
