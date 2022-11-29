@@ -3,6 +3,7 @@ package com.jeremias.paddlechampion.mapper;
 import com.jeremias.paddlechampion.dto.TeamDto;
 import com.jeremias.paddlechampion.entity.TeamEntity;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import org.springframework.stereotype.Component;
 

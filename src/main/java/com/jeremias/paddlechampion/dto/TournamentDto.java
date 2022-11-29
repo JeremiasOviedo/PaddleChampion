@@ -18,5 +18,5 @@ public class TournamentDto {
   private Inscription inscriptionStatus;
   private List<TeamDto> teams;
   private List<Match> matches;
-
+  private UserDto creator;
 }
