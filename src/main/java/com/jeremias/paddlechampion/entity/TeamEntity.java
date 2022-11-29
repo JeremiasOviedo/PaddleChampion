@@ -66,5 +66,4 @@ public class TeamEntity implements Serializable {
     }
   }
 
-
 }

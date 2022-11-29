@@ -1,7 +1,9 @@
 package com.jeremias.paddlechampion.service;
 
+
 import com.jeremias.paddlechampion.dto.TournamentDto;
 import com.jeremias.paddlechampion.entity.TeamEntity;
+import com.jeremias.paddlechampion.dto.TeamDto;
 import com.jeremias.paddlechampion.entity.TournamentEntity;
 import com.jeremias.paddlechampion.model.Match;
 import java.util.List;
@@ -18,6 +20,7 @@ public interface ITournamentService {
   void delete(Long id);
 
   TournamentDto update(Long id, TournamentDto dto);
+
 
 
 }

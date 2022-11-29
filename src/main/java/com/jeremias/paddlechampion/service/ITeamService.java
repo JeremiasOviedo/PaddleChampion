@@ -15,4 +15,5 @@ public interface ITeamService {
   TeamDto update(Long id, TeamDto dto);
 
   PageDto<TeamDto> findAll(Pageable pageable, HttpServletRequest request);
+
 }

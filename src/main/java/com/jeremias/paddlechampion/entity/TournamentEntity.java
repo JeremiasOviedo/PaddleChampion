@@ -14,7 +14,7 @@ import jakarta.persistence.Table;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
+
 import lombok.Getter;
 import lombok.Setter;
 
@@ -48,8 +48,8 @@ public class TournamentEntity implements Serializable {
   @ManyToMany(mappedBy = "tournaments")
   List<TeamEntity> teams = new ArrayList<>();
 
+
   @ManyToOne
   @JoinColumn(name = "USER_ID", nullable = false)
   UserEntity user;
-
 }
