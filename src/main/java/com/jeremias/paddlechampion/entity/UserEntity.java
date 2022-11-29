@@ -4,13 +4,16 @@ import jakarta.persistence.*;
 import java.io.Serializable;
 import java.sql.Date;
 import java.util.Set;
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.UpdateTimestamp;
 import org.hibernate.annotations.Where;
 
-@Data
+
+@Getter
+@Setter
 @Entity
 @Table(name = "USERS")
 
@@ -55,6 +58,10 @@ public class UserEntity implements Serializable {
       inverseJoinColumns = @JoinColumn(name = "TEAM_ID")
   )
   Set<TeamEntity> teams;
+
+
+  @OneToMany(mappedBy = "user")
+  Set<TournamentEntity> tournaments;
 
 
 }
