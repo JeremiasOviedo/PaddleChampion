@@ -36,6 +36,9 @@ public class TournamentEntity implements Serializable {
   @Column(name = "MAX_CATEGORY", nullable = false)
   private Integer maxCategory;
 
+  @Column(name="MAX_TEAMS", nullable = false)
+  private Integer maxTeams;
+
   @Column(name = "INSCRIPTION")
   private Inscription inscriptionStatus;
 
