@@ -1,22 +1,27 @@
 package com.jeremias.paddlechampion.entity;
 
+import com.jeremias.paddlechampion.enumeration.Inscription;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToMany;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import java.io.Serializable;
 import java.util.Set;
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
-@Data
+@Getter
+@Setter
 @Entity
 @Table(name = "TOURNAMENTS")
 public class TournamentEntity implements Serializable {
 
-  public static final Long serialVersionUID = 1l;
+  public static final Long serialVersionUID = 1L;
 
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -29,7 +34,14 @@ public class TournamentEntity implements Serializable {
   @Column(name = "MAX_CATEGORY", nullable = false)
   private Integer maxCategory;
 
+  @Column(name = "INSCRIPTION")
+  private Inscription inscriptionStatus;
+
   @ManyToMany(mappedBy = "tournaments")
   Set<TeamEntity> teams;
+
+  @ManyToOne
+  @JoinColumn(name = "USER_ID", nullable = false)
+  UserEntity user;
 
 }
