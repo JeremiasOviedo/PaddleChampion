@@ -11,6 +11,7 @@ import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.UpdateTimestamp;
 import org.hibernate.annotations.Where;
 
+
 @Getter
 @Setter
 @Entity
@@ -57,6 +58,7 @@ public class UserEntity implements Serializable {
       inverseJoinColumns = @JoinColumn(name = "TEAM_ID")
   )
   Set<TeamEntity> teams;
+
 
   @OneToMany(mappedBy = "user")
   Set<TournamentEntity> tournaments;

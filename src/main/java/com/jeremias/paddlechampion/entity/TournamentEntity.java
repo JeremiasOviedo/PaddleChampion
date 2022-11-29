@@ -1,5 +1,6 @@
 package com.jeremias.paddlechampion.entity;
 
+
 import com.jeremias.paddlechampion.enumeration.Inscription;
 import com.jeremias.paddlechampion.model.Match;
 import jakarta.persistence.Column;
@@ -23,7 +24,9 @@ import lombok.Setter;
 @Table(name = "TOURNAMENTS")
 public class TournamentEntity implements Serializable {
 
+
   public static final Long serialVersionUID = 1L;
+
 
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -35,6 +38,7 @@ public class TournamentEntity implements Serializable {
 
   @Column(name = "MAX_CATEGORY", nullable = false)
   private Integer maxCategory;
+
 
   @Column(name="MAX_TEAMS", nullable = false)
   private Integer maxTeams;
@@ -50,5 +54,8 @@ public class TournamentEntity implements Serializable {
   @ManyToOne
   @JoinColumn(name = "USER_ID", nullable = false)
   UserEntity user;
+
+  @ManyToMany(mappedBy = "tournaments")
+  Set<TeamEntity> teams;
 
 }
