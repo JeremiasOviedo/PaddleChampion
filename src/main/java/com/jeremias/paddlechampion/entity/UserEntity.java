@@ -3,6 +3,7 @@ package com.jeremias.paddlechampion.entity;
 import jakarta.persistence.*;
 import java.io.Serializable;
 import java.sql.Date;
+import java.util.List;
 import java.util.Set;
 import lombok.Getter;
 import lombok.Setter;
@@ -10,7 +11,6 @@ import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.UpdateTimestamp;
 import org.hibernate.annotations.Where;
-
 
 @Getter
 @Setter
@@ -57,8 +57,7 @@ public class UserEntity implements Serializable {
       joinColumns = @JoinColumn(name = "USER_ID"),
       inverseJoinColumns = @JoinColumn(name = "TEAM_ID")
   )
-  Set<TeamEntity> teams;
-
+  List<TeamEntity> teams;
 
   @OneToMany(mappedBy = "user")
   Set<TournamentEntity> tournaments;

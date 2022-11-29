@@ -1,6 +1,7 @@
 package com.jeremias.paddlechampion.dto;
 
-import java.util.Set;
+
+import java.util.List;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -13,6 +14,7 @@ public class UserDto {
   private String lastName;
   private String email;
   private Integer category;
-  private Set<TeamDto> teams;
+  private List<TeamDto> teams;
+
 
 }
