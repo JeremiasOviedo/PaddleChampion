@@ -5,6 +5,8 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.Table;
 import java.io.Serializable;
@@ -37,4 +39,12 @@ public class TeamEntity implements Serializable {
 
   @ManyToMany(mappedBy = "teams")
   Set<UserEntity> players;
+
+  @ManyToMany
+  @JoinTable(
+      name = "TEAM_TOURNAMENT",
+      joinColumns = @JoinColumn(name = "TEAM_ID"),
+      inverseJoinColumns = @JoinColumn(name = "TOURNAMENT_ID")
+  )
+  Set<TournamentEntity> tournaments;
 }
