@@ -8,7 +8,9 @@ import com.jeremias.paddlechampion.service.ITeamService;
 import jakarta.servlet.http.HttpServletRequest;
 import java.awt.print.Pageable;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
+@Service
 public class TeamServiceImpl implements ITeamService {
 
   @Autowired
