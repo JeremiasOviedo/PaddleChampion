@@ -5,7 +5,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 
-public interface TournamentRepo extends JpaRepository<TournamentEntity, Long> {
+public interface TournamentRepository extends JpaRepository<TournamentEntity, Long> {
 
   TournamentEntity findByName(String name);
 

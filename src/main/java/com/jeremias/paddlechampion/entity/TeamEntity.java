@@ -49,4 +49,22 @@ public class TeamEntity implements Serializable {
       inverseJoinColumns = @JoinColumn(name = "TOURNAMENT_ID")
   )
   Set<TournamentEntity> tournaments;
+
+  private void addUserToTeam(UserEntity user) {
+    if (players.size() == maxPlayers) {
+      System.out.println("Cannot add more players to team");
+    } else {
+      players.add(user);
+    }
+  }
+
+  private void deleteUserFromTeam(UserEntity user) {
+    if (!players.contains(user)) {
+      System.out.println("User doesnt belong to team");
+    } else {
+      players.remove(user);
+    }
+  }
+
+
 }
