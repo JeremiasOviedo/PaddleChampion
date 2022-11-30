@@ -5,6 +5,7 @@ import com.jeremias.paddlechampion.dto.UserDto;
 import com.jeremias.paddlechampion.entity.UserEntity;
 import com.jeremias.paddlechampion.mapper.TeamMap;
 import com.jeremias.paddlechampion.mapper.UserMap;
+import com.jeremias.paddlechampion.mapper.exception.ParamNotFound;
 import com.jeremias.paddlechampion.repository.UserRepository;
 import com.jeremias.paddlechampion.service.IUserService;
 import jakarta.servlet.http.HttpServletRequest;
@@ -45,10 +46,11 @@ public class UserServiceImpl implements IUserService {
   @Override
   public UserDto findById(Long id) {
 
-    UserEntity entity = userRepo.findByUserId(id);
+    UserEntity entity = userRepo.findById(id).orElseThrow(
+        () -> new ParamNotFound("User ID invalid"));
     UserDto user = userMap.userEntity2Dto(entity);
-
     return user;
+
   }
 
   @Override
@@ -59,11 +61,9 @@ public class UserServiceImpl implements IUserService {
   @Override
   public void delete(Long id) {
 
-    if (!userRepo.existsById(id)) {
-      System.out.println("User doesn't exist");
-    } else {
-      userRepo.deleteById(id);
-    }
+    UserEntity entity = userRepo.findById(id).orElseThrow(
+        () -> new ParamNotFound("User ID is invalid"));
+    userRepo.deleteById(id);
   }
 
   @Override
