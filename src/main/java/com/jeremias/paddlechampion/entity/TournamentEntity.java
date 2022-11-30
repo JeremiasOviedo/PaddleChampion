@@ -56,7 +56,7 @@ public class TournamentEntity implements Serializable {
 
 
   @ManyToOne
-  @JoinColumn(name = "USER_ID", nullable = false)
+  @JoinColumn(name = "USER_ID")
   UserEntity user;
 
   public void addTeam(TeamEntity team) {

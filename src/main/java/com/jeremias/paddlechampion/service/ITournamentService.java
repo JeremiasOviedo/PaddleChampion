@@ -17,7 +17,7 @@ public interface ITournamentService {
 
   void deleteTeam(Long tournamentId, Long teamId);
 
-  List<List<Match>> createFixture(List<TeamEntity> teams);
+  List<List<Match>> createFixture(Long id);
 
   void delete(Long id);
 

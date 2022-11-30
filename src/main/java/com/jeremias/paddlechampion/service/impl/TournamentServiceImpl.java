@@ -56,9 +56,14 @@ public class TournamentServiceImpl implements ITournamentService {
   }
 
   @Override
-  public List<List<Match>> createFixture(List<TeamEntity> teams) {
+  public List<List<Match>> createFixture(Long id) {
 
-    List<List<Match>> fixture = new ArrayList<>();
+    TournamentEntity tournament = tournamentRepo.findById(id).orElseThrow(
+        () -> new ParamNotFound("Tournament ID is invalid"));
+
+    List<TeamEntity> teams = tournament.getTeams();
+
+    List<List<Match>> fixture = tournament.getFixture();
 
     if (teams.size() % 2 != 0) {
       TeamEntity free = new TeamEntity();

@@ -1,19 +1,36 @@
 package com.jeremias.paddlechampion.model;
 
 import com.jeremias.paddlechampion.entity.TeamEntity;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.OneToOne;
+import jakarta.persistence.Transient;
+import java.io.Serializable;
 import lombok.Getter;
 import lombok.Setter;
+import org.springframework.context.annotation.Bean;
 
 @Getter
 @Setter
-public class Match {
+@Entity
+public class Match implements Serializable {
 
+  private static final Long serialVersionUID = 1L;
+
+  @Id
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  private Long matchId;
+
+  @OneToOne
   private TeamEntity teamA;
+ @OneToOne
   private TeamEntity teamB;
 
   private Integer teamAScore;
   private Integer teamBScore;
-
+ @OneToOne
   private TeamEntity winner;
 
   public Match(TeamEntity teamA, TeamEntity teamB){

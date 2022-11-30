@@ -1,11 +1,16 @@
 package com.jeremias.paddlechampion.service.impl;
 
+import com.jeremias.paddlechampion.dto.AddPlayer2TeamDto;
 import com.jeremias.paddlechampion.dto.PageDto;
 import com.jeremias.paddlechampion.dto.TeamDto;
+import com.jeremias.paddlechampion.dto.UserDto;
 import com.jeremias.paddlechampion.entity.TeamEntity;
+import com.jeremias.paddlechampion.entity.UserEntity;
 import com.jeremias.paddlechampion.mapper.TeamMap;
+import com.jeremias.paddlechampion.mapper.UserMap;
 import com.jeremias.paddlechampion.mapper.exception.ParamNotFound;
 import com.jeremias.paddlechampion.repository.TeamRepository;
+import com.jeremias.paddlechampion.repository.UserRepository;
 import com.jeremias.paddlechampion.service.ITeamService;
 import jakarta.servlet.http.HttpServletRequest;
 import java.awt.print.Pageable;
@@ -17,16 +22,23 @@ public class TeamServiceImpl implements ITeamService {
 
   @Autowired
   private TeamRepository teamRepo;
+
+  @Autowired
+  private UserRepository userRepo;
+
   @Autowired
   TeamMap teamMap;
 
+  @Autowired
+  UserMap userMap;
+
   @Override
-  public TeamEntity createTeam(TeamDto dto) {
+  public TeamDto createTeam(TeamDto dto) {
 
     TeamEntity entity = teamMap.teamDto2Entity(dto);
     teamRepo.save(entity);
 
-    return entity;
+    return teamMap.teamEntity2Dto(entity);
   }
 
   @Override
@@ -55,4 +67,19 @@ public class TeamServiceImpl implements ITeamService {
   public PageDto<TeamDto> findAll(Pageable pageable, HttpServletRequest request) {
     return null;
   }
+
+  @Override
+  public UserDto addPlayer(AddPlayer2TeamDto dto) {
+    TeamEntity team = teamRepo.findByTeamId(dto.getTeamId());
+    UserEntity player = userRepo.findByUserId(dto.getPlayerId());
+
+    team.addUserToTeam(player);
+
+    teamRepo.save(team);
+    userRepo.save(player);
+
+    return userMap.userEntity2Dto(player);
+  }
+
+
 }

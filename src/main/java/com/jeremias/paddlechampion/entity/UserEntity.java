@@ -17,8 +17,6 @@ import org.hibernate.annotations.Where;
 @Entity
 @Table(name = "USERS")
 
-@SQLDelete(sql = "UPDATE users SET deleted = true WHERE user_id=?")
-@Where(clause = "deleted=false")
 public class UserEntity implements Serializable {
 
   public static final Long serialVersionUID = 1L;
