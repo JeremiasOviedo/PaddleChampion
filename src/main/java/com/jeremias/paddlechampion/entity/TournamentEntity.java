@@ -1,6 +1,8 @@
 package com.jeremias.paddlechampion.entity;
 
 import com.jeremias.paddlechampion.enumeration.Inscription;
+import com.jeremias.paddlechampion.mapper.exception.MaxTeamsException;
+import com.jeremias.paddlechampion.mapper.exception.ParamNotFound;
 import com.jeremias.paddlechampion.model.Match;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -37,7 +39,7 @@ public class TournamentEntity implements Serializable {
   @Column(name = "MAX_CATEGORY", nullable = false)
   private Integer maxCategory;
 
-  @Column(name="MAX_TEAMS", nullable = false)
+  @Column(name = "MAX_TEAMS", nullable = false)
   private Integer maxTeams;
 
   @Column(name = "INSCRIPTION")
@@ -52,4 +54,24 @@ public class TournamentEntity implements Serializable {
   @ManyToOne
   @JoinColumn(name = "USER_ID", nullable = false)
   UserEntity user;
+
+  public void addTeam(TeamEntity team) {
+
+    if (teams.size() == maxTeams) {
+      throw new MaxTeamsException("Cannot add more teams.");
+    } else {
+      teams.add(team);
+    }
+  }
+
+  public void removeTeam(TeamEntity team) {
+
+    if (!teams.remove(team)) {
+      throw new ParamNotFound("Team doesn't belong in the tournament");
+    } else {
+      teams.remove(team);
+    }
+
+  }
+
 }
