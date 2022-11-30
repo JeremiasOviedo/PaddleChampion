@@ -16,5 +16,10 @@ public class Match {
 
   private TeamEntity winner;
 
+  public Match(TeamEntity teamA, TeamEntity teamB){
+
+    this.teamA = teamA;
+    this.teamB = teamB;
+  }
 
 }

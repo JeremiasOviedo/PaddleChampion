@@ -13,9 +13,11 @@ public interface ITournamentService {
 
   TournamentDto createTournament(TournamentDto dto);
 
-  void addTeam(Long id);
+  void addTeam(Long tournamentId, Long teamId);
 
-  List<Match> createFixture(List<TeamEntity> teams);
+  void deleteTeam(Long tournamentId, Long teamId);
+
+  List<List<Match>> createFixture(List<TeamEntity> teams);
 
   void delete(Long id);
 

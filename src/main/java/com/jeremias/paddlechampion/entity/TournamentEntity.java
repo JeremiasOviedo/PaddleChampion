@@ -45,7 +45,11 @@ public class TournamentEntity implements Serializable {
   @Column(name = "INSCRIPTION")
   private Inscription inscriptionStatus;
 
+  @Column(name = "MATCHES")
   private List<Match> matches;
+
+  @Column (name = "FIXTURE")
+  private List<List<Match>> fixture;
 
   @ManyToMany(mappedBy = "tournaments")
   List<TeamEntity> teams = new ArrayList<>();
