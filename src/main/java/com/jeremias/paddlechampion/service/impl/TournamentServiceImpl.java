@@ -1,11 +1,14 @@
 package com.jeremias.paddlechampion.service.impl;
 
+import com.jeremias.paddlechampion.dto.MatchDto;
 import com.jeremias.paddlechampion.dto.TournamentDto;
 import com.jeremias.paddlechampion.entity.TeamEntity;
 import com.jeremias.paddlechampion.entity.TournamentEntity;
+import com.jeremias.paddlechampion.mapper.MatchMap;
 import com.jeremias.paddlechampion.mapper.TournamentMap;
 import com.jeremias.paddlechampion.mapper.exception.ParamNotFound;
-import com.jeremias.paddlechampion.model.Match;
+import com.jeremias.paddlechampion.entity.MatchEntity;
+import com.jeremias.paddlechampion.repository.MatchRepository;
 import com.jeremias.paddlechampion.repository.TeamRepository;
 import com.jeremias.paddlechampion.repository.TournamentRepository;
 import com.jeremias.paddlechampion.service.ITournamentService;
@@ -18,11 +21,15 @@ import org.springframework.stereotype.Service;
 public class TournamentServiceImpl implements ITournamentService {
 
   @Autowired
+  private MatchRepository matchRepo;
+  @Autowired
   private TournamentRepository tournamentRepo;
   @Autowired
   private TeamRepository teamRepo;
   @Autowired
   TournamentMap tournamentMap;
+  @Autowired
+  MatchMap matchMap;
 
   @Override
   public TournamentDto createTournament(TournamentDto dto) {
@@ -30,6 +37,18 @@ public class TournamentServiceImpl implements ITournamentService {
     tournamentRepo.save(entity);
 
     return dto;
+  }
+
+  @Override
+  public TournamentDto getTournament(Long tournamentId) {
+
+    TournamentEntity tournament = tournamentRepo.findById(tournamentId).orElseThrow(
+        () -> new ParamNotFound("Team doesn't exist"));
+
+    TournamentDto dto = tournamentMap.tournamentEntity2Dto(tournament);
+
+    return dto;
+
   }
 
   @Override
@@ -56,18 +75,15 @@ public class TournamentServiceImpl implements ITournamentService {
   }
 
   @Override
-  public List<List<Match>> createFixture(Long id) {
+  public List<MatchDto> createFixture(Long id) {
 
     TournamentEntity tournament = tournamentRepo.findById(id).orElseThrow(
         () -> new ParamNotFound("Tournament ID is invalid"));
 
     List<TeamEntity> teams = tournament.getTeams();
 
-    List<List<Match>> fixture = tournament.getFixture();
-
     if (teams.size() % 2 != 0) {
-      TeamEntity free = new TeamEntity();
-      free.setName("FREE");
+      TeamEntity free = teamRepo.findByName("FREE");
       teams.add(free);
     }
 
@@ -78,34 +94,36 @@ public class TournamentServiceImpl implements ITournamentService {
     teamEntities.addAll(teams);
     teamEntities.remove(0);
 
+    List<MatchEntity> matchEntities = new ArrayList<>();
+
     int teamsSize = teamEntities.size();
 
     for (int round = 0; round < numRounds; round++) {
 
-      List<Match> matches = new ArrayList<>();
-
       int teamIdx = round % teamsSize;
 
-      Match matchA = new Match(teamEntities.get(teamIdx), teams.get(0));
+      MatchEntity matchEntityA = new MatchEntity(teamEntities.get(teamIdx), teams.get(0),
+          tournament);
 
-      matches.add(matchA);
+      matchRepo.save(matchEntityA);
+      matchEntities.add(matchEntityA);
 
       for (int idx = 1; idx < halfSize; idx++) {
 
         TeamEntity teamA = teamEntities.get((round + idx) % teamsSize);
         TeamEntity teamB = teamEntities.get((round + teamsSize - idx) % teamsSize);
 
-        Match matchB = new Match(teamA, teamB);
+        MatchEntity matchEntityB = new MatchEntity(teamA, teamB, tournament);
 
-        matches.add(matchB);
+        matchRepo.save(matchEntityB);
+        matchEntities.add(matchEntityB);
 
       }
 
-      fixture.add(matches);
-
     }
 
-    return fixture;
+    List<MatchDto> matchesDto = matchMap.matchEntityList2Dto(matchEntities);
+    return matchesDto;
   }
 
   @Override

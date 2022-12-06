@@ -12,7 +12,9 @@ import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.Table;
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 import lombok.Getter;
 import lombok.Setter;
@@ -57,7 +59,7 @@ public class TeamEntity implements Serializable {
   )
   Set<UserEntity> players = new HashSet<>();
 
-  @ManyToMany(mappedBy= "teams",
+  @ManyToMany(mappedBy = "teams",
       fetch = FetchType.LAZY,
       cascade
           = {
@@ -67,6 +69,17 @@ public class TeamEntity implements Serializable {
           CascadeType.PERSIST
       })
   Set<TournamentEntity> tournaments = new HashSet<>();
+
+  @ManyToMany(mappedBy = "matchTeams",
+      fetch = FetchType.LAZY,
+      cascade
+          = {
+          CascadeType.DETACH,
+          CascadeType.MERGE,
+          CascadeType.REFRESH,
+          CascadeType.PERSIST
+      })
+  private List<MatchEntity> matches = new ArrayList<>();
 
   public void addUserToTeam(UserEntity user) {
     //  if (players.size() == maxPlayers) {

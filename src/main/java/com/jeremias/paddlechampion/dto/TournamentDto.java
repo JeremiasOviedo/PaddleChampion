@@ -1,7 +1,7 @@
 package com.jeremias.paddlechampion.dto;
 
 import com.jeremias.paddlechampion.enumeration.Inscription;
-import com.jeremias.paddlechampion.model.Match;
+import com.jeremias.paddlechampion.entity.MatchEntity;
 import java.util.List;
 import lombok.Getter;
 import lombok.Setter;
@@ -16,7 +16,7 @@ public class TournamentDto {
   private Integer MaxTeams;
   private Inscription inscriptionStatus;
   private List<TeamDto> teams;
-  private List<Match> matches;
+  private List<MatchEntity> matchEntities;
   private UserDto creator;
 
 }

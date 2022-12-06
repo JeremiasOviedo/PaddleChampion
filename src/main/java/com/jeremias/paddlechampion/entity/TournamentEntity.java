@@ -3,7 +3,6 @@ package com.jeremias.paddlechampion.entity;
 import com.jeremias.paddlechampion.enumeration.Inscription;
 import com.jeremias.paddlechampion.mapper.exception.MaxTeamsException;
 import com.jeremias.paddlechampion.mapper.exception.ParamNotFound;
-import com.jeremias.paddlechampion.model.Match;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -15,6 +14,7 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -48,12 +48,6 @@ public class TournamentEntity implements Serializable {
   @Column(name = "INSCRIPTION")
   private Inscription inscriptionStatus;
 
-  @Column(name = "MATCHES")
-  private List<Match> matches;
-
-  @Column(name = "FIXTURE")
-  private List<List<Match>> fixture;
-
   @ManyToMany(
       fetch = FetchType.LAZY,
       cascade
@@ -62,7 +56,7 @@ public class TournamentEntity implements Serializable {
           CascadeType.MERGE,
           CascadeType.REFRESH,
           CascadeType.PERSIST
-  })
+      })
   @JoinTable(
       name = "TOURNAMENT_TEAM",
       joinColumns = @JoinColumn(name = "TOURNAMENT_ID"),
@@ -70,6 +64,18 @@ public class TournamentEntity implements Serializable {
   )
   List<TeamEntity> teams = new ArrayList<>();
 
+
+  @Column(name = "MATCHES", columnDefinition = "TEXT")
+  @OneToMany(mappedBy = "tournament",
+      fetch = FetchType.LAZY,
+      cascade
+          = {
+          CascadeType.DETACH,
+          CascadeType.MERGE,
+          CascadeType.REFRESH,
+          CascadeType.PERSIST
+      })
+  private List<MatchEntity> matchEntities;
 
   @ManyToOne(fetch = FetchType.LAZY,
       cascade

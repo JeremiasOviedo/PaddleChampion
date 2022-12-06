@@ -4,13 +4,15 @@ import com.jeremias.paddlechampion.dto.TournamentDto;
 import com.jeremias.paddlechampion.entity.TournamentEntity;
 import java.util.ArrayList;
 import java.util.List;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
 public class TournamentMap {
 
+ @Autowired
   TeamMap teamMap;
-
+ @Autowired
   UserMap userMap;
 
   public TournamentDto tournamentEntity2Dto(TournamentEntity entity) {
@@ -22,8 +24,8 @@ public class TournamentMap {
     dto.setMaxCategory(entity.getMaxCategory());
     dto.setMaxTeams(entity.getMaxTeams());
     dto.setInscriptionStatus(entity.getInscriptionStatus());
-   // dto.setTeams(teamMap.teamEntityList2DtoList(entity.getTeams()));
-    dto.setMatches(entity.getMatches());
+    dto.setTeams(teamMap.teamEntityList2DtoList(entity.getTeams()));
+    dto.setMatchEntities(entity.getMatchEntities());
 
     return dto;
 
@@ -39,7 +41,7 @@ public class TournamentMap {
     entity.setMaxTeams(dto.getMaxTeams());
     entity.setInscriptionStatus(dto.getInscriptionStatus());
    // entity.setTeams(teamMap.teamDto2EntityList(dto.getTeams()));
-    entity.setMatches(dto.getMatches());
+    entity.setMatchEntities(dto.getMatchEntities());
 
     return entity;
   }
