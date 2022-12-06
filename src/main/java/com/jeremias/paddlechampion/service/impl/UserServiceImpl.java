@@ -9,7 +9,9 @@ import com.jeremias.paddlechampion.mapper.exception.ParamNotFound;
 import com.jeremias.paddlechampion.repository.UserRepository;
 import com.jeremias.paddlechampion.service.IUserService;
 import jakarta.servlet.http.HttpServletRequest;
+import java.util.Collection;
 import java.util.List;
+import java.util.Set;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -74,7 +76,7 @@ public class UserServiceImpl implements IUserService {
     entity.setLastName(dto.getLastName());
     entity.setEmail(dto.getEmail());
     entity.setCategory(dto.getCategory());
-    entity.setTeams(teamMap.teamDto2EntityList(dto.getTeams()));
+   // entity.setTeams(teamMap.teamDto2EntityList(dto.getTeams()));
 
     userRepo.save(entity);
 

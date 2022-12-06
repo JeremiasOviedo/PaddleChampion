@@ -15,7 +15,7 @@ public class UserDto {
   private String email;
   private String password;
   private Integer category;
-  private List<TeamDto> teams;
+ // private List<TeamDto> teams;
 
 
 }

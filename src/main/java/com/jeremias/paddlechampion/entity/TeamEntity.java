@@ -1,7 +1,9 @@
 package com.jeremias.paddlechampion.entity;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -10,6 +12,7 @@ import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.Table;
 import java.io.Serializable;
+import java.util.HashSet;
 import java.util.Set;
 import lombok.Getter;
 import lombok.Setter;
@@ -39,24 +42,39 @@ public class TeamEntity implements Serializable {
   @Column(name = "MAX_PLAYERS")
   private Integer maxPlayers;
 
-  @ManyToMany(mappedBy = "teams")
-  Set<UserEntity> players;
-
-  @ManyToMany
+  @ManyToMany(fetch = FetchType.LAZY,
+      cascade
+          = {
+          CascadeType.DETACH,
+          CascadeType.MERGE,
+          CascadeType.REFRESH,
+          CascadeType.PERSIST
+      })
   @JoinTable(
-      name = "TEAM_TOURNAMENT",
+      name = "TEAM_PLAYER",
       joinColumns = @JoinColumn(name = "TEAM_ID"),
-      inverseJoinColumns = @JoinColumn(name = "TOURNAMENT_ID")
+      inverseJoinColumns = @JoinColumn(name = "USER_ID")
   )
-  Set<TournamentEntity> tournaments;
+  Set<UserEntity> players = new HashSet<>();
+
+  @ManyToMany(mappedBy= "teams",
+      fetch = FetchType.LAZY,
+      cascade
+          = {
+          CascadeType.DETACH,
+          CascadeType.MERGE,
+          CascadeType.REFRESH,
+          CascadeType.PERSIST
+      })
+  Set<TournamentEntity> tournaments = new HashSet<>();
 
   public void addUserToTeam(UserEntity user) {
-  //  if (players.size() == maxPlayers) {
-   //   System.out.println("Cannot add more players to team");
-  //  } else {
-      players.add(user);
-    }
- // }
+    //  if (players.size() == maxPlayers) {
+    //   System.out.println("Cannot add more players to team");
+    //  } else {
+    players.add(user);
+  }
+  // }
 
   public void deleteUserFromTeam(UserEntity user) {
     if (!players.contains(user)) {

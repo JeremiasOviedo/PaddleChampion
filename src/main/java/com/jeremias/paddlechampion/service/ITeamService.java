@@ -10,6 +10,7 @@ import java.awt.print.Pageable;
 
 public interface ITeamService {
 
+  TeamDto getTeam(Long id);
   TeamDto createTeam(TeamDto dto);
 
   void delete(Long id);

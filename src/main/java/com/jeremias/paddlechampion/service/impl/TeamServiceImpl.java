@@ -33,6 +33,18 @@ public class TeamServiceImpl implements ITeamService {
   UserMap userMap;
 
   @Override
+  public TeamDto getTeam(Long id) {
+    TeamEntity team = teamRepo.findById(id).orElseThrow(
+        () -> new ParamNotFound("Team doesnt exist")
+    );
+
+    TeamDto dto = teamMap.teamEntity2Dto(team);
+
+    return dto;
+
+  }
+
+  @Override
   public TeamDto createTeam(TeamDto dto) {
 
     TeamEntity entity = teamMap.teamDto2Entity(dto);
@@ -75,8 +87,8 @@ public class TeamServiceImpl implements ITeamService {
 
     team.addUserToTeam(player);
 
-    teamRepo.save(team);
     userRepo.save(player);
+    teamRepo.save(team);
 
     return userMap.userEntity2Dto(player);
   }

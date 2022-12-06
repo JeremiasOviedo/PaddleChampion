@@ -4,12 +4,15 @@ import com.jeremias.paddlechampion.enumeration.Inscription;
 import com.jeremias.paddlechampion.mapper.exception.MaxTeamsException;
 import com.jeremias.paddlechampion.mapper.exception.ParamNotFound;
 import com.jeremias.paddlechampion.model.Match;
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
+import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
@@ -48,14 +51,34 @@ public class TournamentEntity implements Serializable {
   @Column(name = "MATCHES")
   private List<Match> matches;
 
-  @Column (name = "FIXTURE")
+  @Column(name = "FIXTURE")
   private List<List<Match>> fixture;
 
-  @ManyToMany(mappedBy = "tournaments")
+  @ManyToMany(
+      fetch = FetchType.LAZY,
+      cascade
+          = {
+          CascadeType.DETACH,
+          CascadeType.MERGE,
+          CascadeType.REFRESH,
+          CascadeType.PERSIST
+  })
+  @JoinTable(
+      name = "TOURNAMENT_TEAM",
+      joinColumns = @JoinColumn(name = "TOURNAMENT_ID"),
+      inverseJoinColumns = @JoinColumn(name = "TEAM_ID")
+  )
   List<TeamEntity> teams = new ArrayList<>();
 
 
-  @ManyToOne
+  @ManyToOne(fetch = FetchType.LAZY,
+      cascade
+          = {
+          CascadeType.DETACH,
+          CascadeType.MERGE,
+          CascadeType.REFRESH,
+          CascadeType.PERSIST
+      })
   @JoinColumn(name = "USER_ID")
   UserEntity user;
 
