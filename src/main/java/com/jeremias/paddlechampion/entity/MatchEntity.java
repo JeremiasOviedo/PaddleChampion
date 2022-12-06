@@ -17,6 +17,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 
@@ -24,6 +25,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @Table(name="MATCHES")
+@NoArgsConstructor
 public class MatchEntity implements Serializable {
 
   private static final Long serialVersionUID = 1L;
@@ -66,6 +68,7 @@ public class MatchEntity implements Serializable {
   @ManyToOne
   @JoinColumn(name = "TOURNAMENT_ID")
   private TournamentEntity tournament;
+
   public MatchEntity(TeamEntity teamA, TeamEntity teamB, TournamentEntity tournament) {
 
     matchTeams.add(teamA);

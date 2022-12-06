@@ -10,22 +10,24 @@ import org.springframework.stereotype.Component;
 @Component
 public class TournamentMap {
 
- @Autowired
+  @Autowired
   TeamMap teamMap;
- @Autowired
+  @Autowired
   UserMap userMap;
+  @Autowired
+  MatchMap matchMap;
 
   public TournamentDto tournamentEntity2Dto(TournamentEntity entity) {
     TournamentDto dto = new TournamentDto();
 
-   // dto.setCreator(userMap.userEntity2Dto(entity.getUser()));
+    // dto.setCreator(userMap.userEntity2Dto(entity.getUser()));
     dto.setId(entity.getTournamentId());
     dto.setName(entity.getName());
     dto.setMaxCategory(entity.getMaxCategory());
     dto.setMaxTeams(entity.getMaxTeams());
     dto.setInscriptionStatus(entity.getInscriptionStatus());
     dto.setTeams(teamMap.teamEntityList2DtoList(entity.getTeams()));
-    dto.setMatchEntities(entity.getMatchEntities());
+    dto.setMatchEntities(matchMap.matchEntityList2Dto(entity.getMatchEntities()));
 
     return dto;
 
@@ -34,14 +36,14 @@ public class TournamentMap {
   public TournamentEntity tournamentDto2Entity(TournamentDto dto) {
     TournamentEntity entity = new TournamentEntity();
 
-   // entity.setUser(userMap.userDto2Entity(dto.getCreator()));
+    // entity.setUser(userMap.userDto2Entity(dto.getCreator()));
     entity.setTournamentId(dto.getId());
     entity.setName(dto.getName());
     entity.setMaxCategory(dto.getMaxCategory());
     entity.setMaxTeams(dto.getMaxTeams());
     entity.setInscriptionStatus(dto.getInscriptionStatus());
-   // entity.setTeams(teamMap.teamDto2EntityList(dto.getTeams()));
-    entity.setMatchEntities(dto.getMatchEntities());
+    // entity.setTeams(teamMap.teamDto2EntityList(dto.getTeams()));
+    //entity.setMatchEntities(dto.getMatchEntities());
 
     return entity;
   }
