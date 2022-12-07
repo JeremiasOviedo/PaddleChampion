@@ -17,11 +17,14 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import java.io.Serializable;
+import java.sql.Date;
 import java.util.ArrayList;
 import java.util.List;
 
 import lombok.Getter;
 import lombok.Setter;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 
 @Getter
 @Setter
@@ -47,6 +50,14 @@ public class TournamentEntity implements Serializable {
 
   @Column(name = "INSCRIPTION")
   private Inscription inscriptionStatus;
+
+  @Column(name = "CREATION_DATE")
+  @CreationTimestamp
+  private Date creationDate;
+
+  @Column(name = "UPDATE_DATE")
+  @UpdateTimestamp
+  private Date updateDate;
 
   @ManyToMany(
       fetch = FetchType.LAZY,

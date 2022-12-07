@@ -72,5 +72,9 @@ public class UserEntity implements Serializable {
       })
   Set<TournamentEntity> tournaments;
 
+  @ManyToOne
+  @JoinColumn(name = "ROLE_ID")
+  private RoleEntity role;
+
 
 }
