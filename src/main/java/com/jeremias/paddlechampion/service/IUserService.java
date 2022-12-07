@@ -4,6 +4,7 @@ import com.jeremias.paddlechampion.dto.PageDto;
 import com.jeremias.paddlechampion.dto.UserDto;
 import com.jeremias.paddlechampion.repository.UserRepository;
 import jakarta.servlet.http.HttpServletRequest;
+import java.util.Collection;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;

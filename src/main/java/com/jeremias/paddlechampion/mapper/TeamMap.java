@@ -5,17 +5,21 @@ import com.jeremias.paddlechampion.entity.TeamEntity;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
 public class TeamMap {
 
+ @Autowired
+  UserMap userMap;
   public TeamDto teamEntity2Dto(TeamEntity entity) {
     TeamDto dto = new TeamDto();
 
     dto.setId(entity.getTeamId());
     dto.setName(entity.getName());
     dto.setCategory(entity.getCategory());
+    dto.setPlayers(userMap.userEntityList2DtoList(entity.getPlayers().stream().toList()));
 
     return dto;
   }

@@ -3,6 +3,7 @@ package com.jeremias.paddlechampion.entity;
 import jakarta.persistence.*;
 import java.io.Serializable;
 import java.sql.Date;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 import lombok.Getter;
@@ -17,8 +18,6 @@ import org.hibernate.annotations.Where;
 @Entity
 @Table(name = "USERS")
 
-@SQLDelete(sql = "UPDATE users SET deleted = true WHERE user_id=?")
-@Where(clause = "deleted=false")
 public class UserEntity implements Serializable {
 
   public static final Long serialVersionUID = 1L;
@@ -51,15 +50,26 @@ public class UserEntity implements Serializable {
   @Column(name = "CATEGORY", nullable = false)
   private Integer category;
 
-  @ManyToMany
-  @JoinTable(
-      name = "PLAYER_TEAM",
-      joinColumns = @JoinColumn(name = "USER_ID"),
-      inverseJoinColumns = @JoinColumn(name = "TEAM_ID")
-  )
-  List<TeamEntity> teams;
+  @ManyToMany(mappedBy = "players",
+      fetch = FetchType.LAZY,
+      cascade
+          = {
+          CascadeType.DETACH,
+          CascadeType.MERGE,
+          CascadeType.REFRESH,
+          CascadeType.PERSIST
+      })
+  List<TeamEntity> teams = new ArrayList<>();
 
-  @OneToMany(mappedBy = "user")
+  @OneToMany(mappedBy = "user",
+      fetch = FetchType.LAZY,
+      cascade
+          = {
+          CascadeType.DETACH,
+          CascadeType.MERGE,
+          CascadeType.REFRESH,
+          CascadeType.PERSIST
+      })
   Set<TournamentEntity> tournaments;
 
 

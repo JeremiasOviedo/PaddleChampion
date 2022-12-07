@@ -3,6 +3,7 @@ package com.jeremias.paddlechampion.mapper;
 import com.jeremias.paddlechampion.dto.UserDto;
 import com.jeremias.paddlechampion.entity.UserEntity;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import org.springframework.stereotype.Component;
 
@@ -20,7 +21,7 @@ public class UserMap {
     dto.setLastName(entity.getLastName());
     dto.setEmail(entity.getEmail());
     dto.setCategory(entity.getCategory());
-    dto.setTeams(teamMap.teamEntityList2DtoList(entity.getTeams()));
+   // dto.setTeams(teamMap.teamEntityList2DtoList(entity.getTeams()));
 
     return dto;
   }
@@ -33,8 +34,8 @@ public class UserMap {
     entity.setFirstName(dto.getFirstName());
     entity.setLastName(dto.getLastName());
     entity.setEmail(dto.getEmail());
+    entity.setPassword(dto.getPassword());
     entity.setCategory(dto.getCategory());
-    entity.setTeams(teamMap.teamDto2EntityList(dto.getTeams()));
 
     return entity;
   }

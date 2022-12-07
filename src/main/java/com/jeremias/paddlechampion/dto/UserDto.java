@@ -13,8 +13,9 @@ public class UserDto {
   private String firstName;
   private String lastName;
   private String email;
+  private String password;
   private Integer category;
-  private List<TeamDto> teams;
+ // private List<TeamDto> teams;
 
 
 }
