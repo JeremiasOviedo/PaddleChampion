@@ -6,6 +6,7 @@ import com.jeremias.paddlechampion.entity.TeamEntity;
 import com.jeremias.paddlechampion.entity.TournamentEntity;
 import com.jeremias.paddlechampion.mapper.MatchMap;
 import com.jeremias.paddlechampion.mapper.TournamentMap;
+import com.jeremias.paddlechampion.mapper.exception.MatchesException;
 import com.jeremias.paddlechampion.mapper.exception.ParamNotFound;
 import com.jeremias.paddlechampion.entity.MatchEntity;
 import com.jeremias.paddlechampion.repository.MatchRepository;
@@ -45,9 +46,7 @@ public class TournamentServiceImpl implements ITournamentService {
     TournamentEntity tournament = tournamentRepo.findById(tournamentId).orElseThrow(
         () -> new ParamNotFound("Team doesn't exist"));
 
-    TournamentDto dto = tournamentMap.tournamentEntity2Dto(tournament);
-
-    return dto;
+    return tournamentMap.tournamentEntity2Dto(tournament);
 
   }
 
@@ -82,6 +81,12 @@ public class TournamentServiceImpl implements ITournamentService {
 
     List<TeamEntity> teams = tournament.getTeams();
 
+    if (!tournament.getMatchEntities().isEmpty()) {
+
+      throw new MatchesException("The matches are already created");
+
+    }
+
     if (teams.size() % 2 != 0) {
       TeamEntity free = teamRepo.findByName("FREE");
       teams.add(free);
@@ -90,8 +95,7 @@ public class TournamentServiceImpl implements ITournamentService {
     int numRounds = (teams.size() - 1);
     int halfSize = (teams.size() / 2);
 
-    List<TeamEntity> teamEntities = new ArrayList<>();
-    teamEntities.addAll(teams);
+    List<TeamEntity> teamEntities = new ArrayList<>(teams);
     teamEntities.remove(0);
 
     List<MatchEntity> matchEntities = new ArrayList<>();
@@ -122,8 +126,7 @@ public class TournamentServiceImpl implements ITournamentService {
 
     }
 
-    List<MatchDto> matchesDto = matchMap.matchEntityList2Dto(matchEntities);
-    return matchesDto;
+    return matchMap.matchEntityList2Dto(matchEntities);
   }
 
   @Override
