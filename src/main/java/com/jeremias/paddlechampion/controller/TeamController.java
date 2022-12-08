@@ -7,6 +7,7 @@ import com.jeremias.paddlechampion.service.impl.TeamServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -20,7 +21,7 @@ public class TeamController {
 
   @Autowired
   TeamServiceImpl teamService;
-
+  @PreAuthorize("hasAnyRole('USER','ADMIN')")
   @PostMapping("/register")
   public ResponseEntity<TeamDto> createTeam(@RequestBody TeamDto team) {
     TeamDto dto = teamService.createTeam(team);
@@ -28,7 +29,7 @@ public class TeamController {
     return ResponseEntity.status(HttpStatus.CREATED).body(dto);
 
   }
-
+  @PreAuthorize("hasAnyRole('USER','ADMIN')")
   @PostMapping("/addPlayer")
   public ResponseEntity<AddPlayer2TeamDto> addPlayer(AddPlayer2TeamDto dto) {
 
@@ -36,7 +37,7 @@ public class TeamController {
 
     return ResponseEntity.status(HttpStatus.CREATED).body(dto);
   }
-
+  @PreAuthorize("hasAnyRole('USER','ADMIN')")
   @GetMapping("/info/{teamId}")
   public ResponseEntity<TeamDto> getTeam(@PathVariable(name = "teamId") Long teamId) {
 
