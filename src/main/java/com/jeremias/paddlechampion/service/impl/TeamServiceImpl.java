@@ -9,12 +9,14 @@ import com.jeremias.paddlechampion.entity.UserEntity;
 import com.jeremias.paddlechampion.mapper.TeamMap;
 import com.jeremias.paddlechampion.mapper.UserMap;
 import com.jeremias.paddlechampion.mapper.exception.ParamNotFound;
+import com.jeremias.paddlechampion.mapper.exception.RepeatedUsername;
 import com.jeremias.paddlechampion.repository.TeamRepository;
 import com.jeremias.paddlechampion.repository.UserRepository;
 import com.jeremias.paddlechampion.service.ITeamService;
 import java.awt.print.Pageable;
 import javax.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -47,10 +49,21 @@ public class TeamServiceImpl implements ITeamService {
   @Override
   public TeamDto createTeam(TeamDto dto) {
 
-    TeamEntity entity = teamMap.teamDto2Entity(dto);
-    teamRepo.save(entity);
+    if (teamRepo.findByName(dto.getName()) != null){
+      throw new RepeatedUsername("Team name is already taken");
 
-    return teamMap.teamEntity2Dto(entity);
+    }
+
+    String userEmail = SecurityContextHolder.getContext().getAuthentication().getName();
+    UserEntity userEntity = userRepo.findByEmail(userEmail);
+
+    TeamEntity entity = teamMap.teamDto2Entity(dto);
+    entity.setMaxPlayers(2);
+    entity.addUserToTeam(userEntity);
+    
+    TeamEntity entitySaved = teamRepo.save(entity);
+
+    return teamMap.teamEntity2Dto(entitySaved);
   }
 
   @Override

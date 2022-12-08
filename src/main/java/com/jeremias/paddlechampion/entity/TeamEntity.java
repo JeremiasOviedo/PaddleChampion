@@ -72,19 +72,32 @@ public class TeamEntity implements Serializable {
   private List<MatchEntity> matches = new ArrayList<>();
 
   public void addUserToTeam(UserEntity user) {
-    //  if (players.size() == maxPlayers) {
-    //   System.out.println("Cannot add more players to team");
-    //  } else {
-    players.add(user);
-  }
-  // }
-
-  public void deleteUserFromTeam(UserEntity user) {
-    if (!players.contains(user)) {
-      System.out.println("User doesnt belong to team");
+    if (players.size() == maxPlayers) {
+      System.out.println("Cannot add more players to team");
     } else {
-      players.remove(user);
+
+      players.add(user);
+      updateCategory();
     }
   }
 
+  public void deleteUserFromTeam(UserEntity user) {
+    if (!players.contains(user)) {
+      System.out.println("User doesn't belong to team");
+    } else {
+      players.remove(user);
+      updateCategory();
+    }
+  }
+
+  private void updateCategory() {
+
+    Integer category = 0;
+
+    for (UserEntity user : players) {
+      category += user.getCategory();
+    }
+
+    this.category = category;
+  }
 }
