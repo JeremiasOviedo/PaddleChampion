@@ -12,8 +12,8 @@ import com.jeremias.paddlechampion.mapper.exception.ParamNotFound;
 import com.jeremias.paddlechampion.repository.TeamRepository;
 import com.jeremias.paddlechampion.repository.UserRepository;
 import com.jeremias.paddlechampion.service.ITeamService;
-import jakarta.servlet.http.HttpServletRequest;
 import java.awt.print.Pageable;
+import javax.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

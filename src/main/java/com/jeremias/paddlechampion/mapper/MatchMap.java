@@ -16,8 +16,10 @@ public class MatchMap {
   private MatchDto matchEntity2Dto(MatchEntity entity) {
 
     MatchDto dto = new MatchDto();
+    dto.setMatchId(entity.getMatchId());
     dto.setTeamA(entity.getTeamA());
     dto.setTeamB(entity.getTeamB());
+    dto.setTeams(teamMap.teamEntityList2DtoList(entity.getMatchTeams()));
 
     return dto;
   }

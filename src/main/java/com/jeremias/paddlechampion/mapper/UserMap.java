@@ -1,10 +1,12 @@
 package com.jeremias.paddlechampion.mapper;
 
+import com.jeremias.paddlechampion.auth.dto.ResponseUserDto;
 import com.jeremias.paddlechampion.dto.UserDto;
 import com.jeremias.paddlechampion.entity.UserEntity;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -21,7 +23,7 @@ public class UserMap {
     dto.setLastName(entity.getLastName());
     dto.setEmail(entity.getEmail());
     dto.setCategory(entity.getCategory());
-   // dto.setTeams(teamMap.teamEntityList2DtoList(entity.getTeams()));
+    // dto.setTeams(teamMap.teamEntityList2DtoList(entity.getTeams()));
 
     return dto;
   }
@@ -61,6 +63,34 @@ public class UserMap {
     }
 
     return entities;
+  }
+
+  public UserEntity userAuthDto2Entity(ResponseUserDto userDto) {
+    BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();
+    UserEntity userEntity = new UserEntity();
+    userEntity.setFirstName(userDto.getFirstName());
+    userEntity.setLastName(userDto.getLastName());
+    userEntity.setEmail(userDto.getEmail());
+    userEntity.setPassword(bCryptPasswordEncoder.encode(userDto.getPassword()));
+    userEntity.setUpdateDate(userDto.getUpdateDate());
+    userEntity.setCreationDate(userDto.getCreationDate());
+    userEntity.setCategory(userDto.getCategory());
+
+    return userEntity;
+  }
+
+  public ResponseUserDto userAuthEntity2Dto(UserEntity entitySaved) {
+    ResponseUserDto dto = new ResponseUserDto();
+    dto.setId(entitySaved.getUserId());
+    dto.setFirstName(entitySaved.getFirstName());
+    dto.setLastName(entitySaved.getLastName());
+    dto.setEmail(entitySaved.getEmail());
+    dto.setRole(entitySaved.getRole().getName());
+    dto.setUpdateDate(entitySaved.getUpdateDate());
+    dto.setCreationDate(entitySaved.getCreationDate());
+    dto.setCategory(entitySaved.getCategory());
+    dto.setPassword("[PROTECTED]");
+    return dto;
   }
 
 }
