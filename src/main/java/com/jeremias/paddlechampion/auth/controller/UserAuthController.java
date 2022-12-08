@@ -4,7 +4,12 @@ import com.jeremias.paddlechampion.auth.dto.AuthenticationRequest;
 import com.jeremias.paddlechampion.auth.dto.AuthenticationResponse;
 import com.jeremias.paddlechampion.auth.dto.ResponseUserDto;
 import com.jeremias.paddlechampion.auth.dto.UserAuthDto;
-import jakarta.validation.Valid;
+import com.jeremias.paddlechampion.auth.service.JwtUtils;
+import com.jeremias.paddlechampion.auth.service.UserDetailsCustomService;
+import com.jeremias.paddlechampion.auth.service.UserDetailsImpl;
+import com.jeremias.paddlechampion.service.IUserService;
+import javax.validation.Valid;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -19,20 +24,14 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/auth")
+@RequiredArgsConstructor
 public class UserAuthController {
 
-  private UserDetailsCustomService userDetailsServices;
-  private AuthenticationManager authenticationManager;
-  private JwtUtils jwtTokenUtils;
+  private final UserDetailsCustomService userDetailsServices;
+  private final AuthenticationManager authenticationManager;
+  private final JwtUtils jwtTokenUtils;
 
-  @Autowired
-  public UserAuthController(UserDetailsCustomService userDetailsServices,
-      AuthenticationManager authenticationManager, JwtUtils jwtTokenUtils,
-      IUserService iUserService) {
-    this.userDetailsServices = userDetailsServices;
-    this.authenticationManager = authenticationManager;
-    this.jwtTokenUtils = jwtTokenUtils;
-  }
+
 
   @PostMapping("/register")
   public ResponseEntity<ResponseUserDto> signUp(@Valid @RequestBody ResponseUserDto user) {

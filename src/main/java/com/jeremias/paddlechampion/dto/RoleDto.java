@@ -1,7 +1,7 @@
 package com.jeremias.paddlechampion.dto;
 
 import com.jeremias.paddlechampion.enumeration.RoleName;
-import jakarta.validation.constraints.NotNull;
+import javax.validation.constraints.NotNull;
 import lombok.Data;
 
 @Data

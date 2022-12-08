@@ -1,6 +1,6 @@
 package com.jeremias.paddlechampion.entity;
 
-import jakarta.persistence.*;
+import javax.persistence.*;
 import java.io.Serializable;
 import java.sql.Date;
 import java.util.ArrayList;

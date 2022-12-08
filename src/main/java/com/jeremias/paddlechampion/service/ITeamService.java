@@ -5,8 +5,8 @@ import com.jeremias.paddlechampion.dto.PageDto;
 import com.jeremias.paddlechampion.dto.TeamDto;
 import com.jeremias.paddlechampion.dto.UserDto;
 import com.jeremias.paddlechampion.entity.TeamEntity;
-import jakarta.servlet.http.HttpServletRequest;
 import java.awt.print.Pageable;
+import javax.servlet.http.HttpServletRequest;
 
 public interface ITeamService {
 
