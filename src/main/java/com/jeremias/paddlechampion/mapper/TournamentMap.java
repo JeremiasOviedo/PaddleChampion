@@ -2,6 +2,7 @@ package com.jeremias.paddlechampion.mapper;
 
 import com.jeremias.paddlechampion.dto.TournamentDto;
 import com.jeremias.paddlechampion.entity.TournamentEntity;
+import com.jeremias.paddlechampion.service.ITournamentService;
 import java.util.ArrayList;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,6 +18,9 @@ public class TournamentMap {
   @Autowired
   MatchMap matchMap;
 
+  @Autowired
+  ITournamentService tournamentService;
+
   public TournamentDto tournamentEntity2Dto(TournamentEntity entity) {
     TournamentDto dto = new TournamentDto();
 
@@ -26,7 +30,9 @@ public class TournamentMap {
     dto.setMaxCategory(entity.getMaxCategory());
     dto.setMaxTeams(entity.getMaxTeams());
     dto.setInscriptionStatus(entity.getInscriptionStatus());
-    dto.setTeams(teamMap.teamEntityList2DtoList(entity.getTeams()));
+    dto.setTeams(teamMap.teamEntityList2DtoList(
+        tournamentService.getTeams(
+            entity.getTournamentId())));
     dto.setMatchEntities(matchMap.matchEntityList2Dto(entity.getMatchEntities()));
 
     return dto;

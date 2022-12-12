@@ -3,7 +3,9 @@ package com.jeremias.paddlechampion.service.impl;
 import com.jeremias.paddlechampion.dto.MatchDto;
 import com.jeremias.paddlechampion.dto.TournamentDto;
 import com.jeremias.paddlechampion.entity.TeamEntity;
+import com.jeremias.paddlechampion.entity.TeamTournament;
 import com.jeremias.paddlechampion.entity.TournamentEntity;
+import com.jeremias.paddlechampion.enumeration.Status;
 import com.jeremias.paddlechampion.mapper.MatchMap;
 import com.jeremias.paddlechampion.mapper.TournamentMap;
 import com.jeremias.paddlechampion.mapper.exception.MatchesException;
@@ -12,6 +14,7 @@ import com.jeremias.paddlechampion.entity.MatchEntity;
 import com.jeremias.paddlechampion.repository.MatchRepository;
 import com.jeremias.paddlechampion.repository.TeamRepository;
 import com.jeremias.paddlechampion.repository.TournamentRepository;
+import com.jeremias.paddlechampion.service.ITeamTournamentService;
 import com.jeremias.paddlechampion.service.ITournamentService;
 import java.util.ArrayList;
 import java.util.List;
@@ -27,6 +30,9 @@ public class TournamentServiceImpl implements ITournamentService {
   private TournamentRepository tournamentRepo;
   @Autowired
   private TeamRepository teamRepo;
+
+  @Autowired
+  private ITeamTournamentService teamTournamentService;
   @Autowired
   TournamentMap tournamentMap;
   @Autowired
@@ -52,25 +58,14 @@ public class TournamentServiceImpl implements ITournamentService {
 
   @Override
   public void addTeam(Long tournamentId, Long teamId) {
-    TeamEntity team = teamRepo.findById(teamId).orElseThrow(
-        () -> new ParamNotFound("Team ID is invalid"));
-    TournamentEntity tournament = tournamentRepo.findById(tournamentId).orElseThrow(
-        () -> new ParamNotFound("Tournament ID is invalid"));
 
-    tournament.addTeam(team);
-    tournamentRepo.save(tournament);
-
+    teamTournamentService.save(tournamentId, teamId);
   }
 
   @Override
   public void deleteTeam(Long tournamentId, Long teamId) {
-    TeamEntity team = teamRepo.findById(teamId).orElseThrow(
-        () -> new ParamNotFound("Team ID is invalid"));
-    TournamentEntity tournament = tournamentRepo.findById(tournamentId).orElseThrow(
-        () -> new ParamNotFound("Tournament ID is invalid"));
 
-    tournament.removeTeam(team);
-    tournamentRepo.save(tournament);
+    teamTournamentService.delete(tournamentId, teamId);
   }
 
   @Override
@@ -79,7 +74,7 @@ public class TournamentServiceImpl implements ITournamentService {
     TournamentEntity tournament = tournamentRepo.findById(id).orElseThrow(
         () -> new ParamNotFound("Tournament ID is invalid"));
 
-    List<TeamEntity> teams = tournament.getTeams();
+    List<TeamEntity> teams = new ArrayList<>(getTeams(id));
 
     if (!tournament.getMatchEntities().isEmpty()) {
 
@@ -107,7 +102,7 @@ public class TournamentServiceImpl implements ITournamentService {
       int teamIdx = round % teamsSize;
 
       MatchEntity matchEntityA = new MatchEntity(teamEntities.get(teamIdx), teams.get(0),
-          tournament);
+          Status.NOT_PLAYED, tournament);
 
       matchRepo.save(matchEntityA);
       matchEntities.add(matchEntityA);
@@ -117,7 +112,7 @@ public class TournamentServiceImpl implements ITournamentService {
         TeamEntity teamA = teamEntities.get((round + idx) % teamsSize);
         TeamEntity teamB = teamEntities.get((round + teamsSize - idx) % teamsSize);
 
-        MatchEntity matchEntityB = new MatchEntity(teamA, teamB, tournament);
+        MatchEntity matchEntityB = new MatchEntity(teamA, teamB, Status.NOT_PLAYED, tournament);
 
         matchRepo.save(matchEntityB);
         matchEntities.add(matchEntityB);
@@ -150,5 +145,22 @@ public class TournamentServiceImpl implements ITournamentService {
     tournament.setInscriptionStatus(dto.getInscriptionStatus());
 
     return dto;
+  }
+
+  @Override
+  public List<TeamEntity> getTeams(Long id) {
+
+    TournamentEntity tournament = tournamentRepo.findById(id).orElseThrow(
+        () -> new ParamNotFound("Tournament ID is invalid"));
+
+    List<TeamEntity> teams = new ArrayList<>();
+
+    for (TeamTournament teamTournament : tournament.getTeamTournaments()) {
+
+      teams.add(teamTournament.getTeam());
+
+    }
+
+    return teams;
   }
 }

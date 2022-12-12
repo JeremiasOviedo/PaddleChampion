@@ -2,6 +2,7 @@ package com.jeremias.paddlechampion.entity;
 
 import com.jeremias.paddlechampion.entity.TeamEntity;
 
+import com.jeremias.paddlechampion.enumeration.Status;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
@@ -38,6 +39,10 @@ public class MatchEntity implements Serializable {
   @Column(name = "WINNER")
   private String winner;
 
+  @Column
+  @Enumerated(EnumType.STRING)
+  private Status status;
+
 
   @ManyToMany(
       fetch = FetchType.LAZY,
@@ -59,7 +64,7 @@ public class MatchEntity implements Serializable {
   @JoinColumn(name = "TOURNAMENT_ID")
   private TournamentEntity tournament;
 
-  public MatchEntity(TeamEntity teamA, TeamEntity teamB, TournamentEntity tournament) {
+  public MatchEntity(TeamEntity teamA, TeamEntity teamB, Status status, TournamentEntity tournament) {
 
     matchTeams.add(teamA);
     matchTeams.add(teamB);
@@ -67,6 +72,7 @@ public class MatchEntity implements Serializable {
     this.teamBScore = 0;
     this.teamA = matchTeams.get(0).getName();
     this.teamB = matchTeams.get(1).getName();
+    this.status = status;
     this.tournament = tournament;
 
 
