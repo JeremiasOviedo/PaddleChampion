@@ -28,9 +28,6 @@ public class TeamEntity implements Serializable {
   @Column(name = "CATEGORY", nullable = false)
   private Integer category;
 
-  @Column(name = "POINTS")
-  private Integer points;
-
   @Column(name = "MAX_PLAYERS")
   private Integer maxPlayers;
 
@@ -49,16 +46,8 @@ public class TeamEntity implements Serializable {
   )
   Set<UserEntity> players = new HashSet<>();
 
-  @ManyToMany(mappedBy = "teams",
-      fetch = FetchType.LAZY,
-      cascade
-          = {
-          CascadeType.DETACH,
-          CascadeType.MERGE,
-          CascadeType.REFRESH,
-          CascadeType.PERSIST
-      })
-  Set<TournamentEntity> tournaments = new HashSet<>();
+  @OneToMany(mappedBy = "tournament")
+  Set<TeamTournament> teamTournament = new HashSet<>();
 
   @ManyToMany(mappedBy = "matchTeams",
       fetch = FetchType.LAZY,

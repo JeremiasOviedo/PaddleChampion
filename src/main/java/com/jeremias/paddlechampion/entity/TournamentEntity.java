@@ -1,8 +1,6 @@
 package com.jeremias.paddlechampion.entity;
 
 import com.jeremias.paddlechampion.enumeration.Inscription;
-import com.jeremias.paddlechampion.mapper.exception.MaxTeamsException;
-import com.jeremias.paddlechampion.mapper.exception.ParamNotFound;
 import javax.persistence.*;
 import java.io.Serializable;
 import java.sql.Date;
@@ -47,21 +45,8 @@ public class TournamentEntity implements Serializable {
   @UpdateTimestamp
   private Date updateDate;
 
-  @ManyToMany(
-      fetch = FetchType.LAZY,
-      cascade
-          = {
-          CascadeType.DETACH,
-          CascadeType.MERGE,
-          CascadeType.REFRESH,
-          CascadeType.PERSIST
-      })
-  @JoinTable(
-      name = "TOURNAMENT_TEAM",
-      joinColumns = @JoinColumn(name = "TOURNAMENT_ID"),
-      inverseJoinColumns = @JoinColumn(name = "TEAM_ID")
-  )
-  List<TeamEntity> teams = new ArrayList<>();
+  @OneToMany(mappedBy = "team")
+  List<TeamTournament> teamTournaments = new ArrayList<>();
 
 
   @Column(name = "MATCHES", columnDefinition = "TEXT")
@@ -87,23 +72,5 @@ public class TournamentEntity implements Serializable {
   @JoinColumn(name = "USER_ID")
   UserEntity user;
 
-  public void addTeam(TeamEntity team) {
-
-    if (teams.size() == maxTeams) {
-      throw new MaxTeamsException("Cannot add more teams.");
-    } else {
-      teams.add(team);
-    }
-  }
-
-  public void removeTeam(TeamEntity team) {
-
-    if (!teams.remove(team)) {
-      throw new ParamNotFound("Team doesn't belong in the tournament");
-    } else {
-      teams.remove(team);
-    }
-
-  }
 
 }
