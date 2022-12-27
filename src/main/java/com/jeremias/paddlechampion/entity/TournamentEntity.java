@@ -1,6 +1,8 @@
 package com.jeremias.paddlechampion.entity;
 
 import com.jeremias.paddlechampion.enumeration.Inscription;
+import java.util.HashSet;
+import java.util.Set;
 import javax.persistence.*;
 import java.io.Serializable;
 import java.sql.Date;
@@ -45,8 +47,16 @@ public class TournamentEntity implements Serializable {
   @UpdateTimestamp
   private Date updateDate;
 
-  @OneToMany(mappedBy = "team")
-  List<TeamTournament> teamTournaments = new ArrayList<>();
+  @OneToMany(mappedBy = "tournament",
+      fetch = FetchType.LAZY,
+      cascade
+          = {
+          CascadeType.DETACH,
+          CascadeType.MERGE,
+          CascadeType.REFRESH,
+          CascadeType.PERSIST
+      })
+  Set<TeamTournament> teamTournaments = new HashSet<>();
 
 
   @Column(name = "MATCHES", columnDefinition = "TEXT")

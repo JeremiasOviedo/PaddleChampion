@@ -69,7 +69,7 @@ public class TournamentServiceImpl implements ITournamentService {
   }
 
   @Override
-  public List<MatchDto> createFixture(Long id) {
+  public List<MatchDto> listMatches(Long id) {
 
     TournamentEntity tournament = tournamentRepo.findById(id).orElseThrow(
         () -> new ParamNotFound("Tournament ID is invalid"));
@@ -78,7 +78,7 @@ public class TournamentServiceImpl implements ITournamentService {
 
     if (!tournament.getMatchEntities().isEmpty()) {
 
-      throw new MatchesException("The matches are already created");
+      return matchMap.matchEntityList2Dto(tournament.getMatchEntities());
 
     }
 

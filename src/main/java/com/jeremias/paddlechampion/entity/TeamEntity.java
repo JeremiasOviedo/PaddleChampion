@@ -46,7 +46,15 @@ public class TeamEntity implements Serializable {
   )
   Set<UserEntity> players = new HashSet<>();
 
-  @OneToMany(mappedBy = "tournament")
+  @OneToMany(mappedBy = "team",
+      fetch = FetchType.LAZY,
+      cascade
+          = {
+          CascadeType.DETACH,
+          CascadeType.MERGE,
+          CascadeType.REFRESH,
+          CascadeType.PERSIST
+      })
   Set<TeamTournament> teamTournament = new HashSet<>();
 
   @ManyToMany(mappedBy = "matchTeams",

@@ -18,7 +18,6 @@ public class TournamentMap {
   @Autowired
   MatchMap matchMap;
 
-  @Autowired
   ITournamentService tournamentService;
 
   public TournamentDto tournamentEntity2Dto(TournamentEntity entity) {

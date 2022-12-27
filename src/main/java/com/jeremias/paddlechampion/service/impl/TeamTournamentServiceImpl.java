@@ -10,7 +10,9 @@ import com.jeremias.paddlechampion.repository.TeamTournamentRepository;
 import com.jeremias.paddlechampion.repository.TournamentRepository;
 import com.jeremias.paddlechampion.service.ITeamTournamentService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
+@Service
 public class TeamTournamentServiceImpl implements ITeamTournamentService {
 
   @Autowired
@@ -39,8 +41,14 @@ public class TeamTournamentServiceImpl implements ITeamTournamentService {
 
       teamTournament.setTournament(tournament);
       teamTournament.setTeam(team);
+      tournament.getTeamTournaments().add(teamTournament);
+      team.getTeamTournament().add(teamTournament);
 
       teamTournamentRepo.save(teamTournament);
+      tournamentRepo.save(tournament);
+      teamRepo.save(team);
+
+
     }
 
   }

@@ -13,12 +13,16 @@ public class MatchMap {
   @Autowired
   TeamMap teamMap;
 
-  private MatchDto matchEntity2Dto(MatchEntity entity) {
+  public MatchDto matchEntity2Dto(MatchEntity entity) {
 
     MatchDto dto = new MatchDto();
     dto.setMatchId(entity.getMatchId());
     dto.setTeamA(entity.getTeamA());
     dto.setTeamB(entity.getTeamB());
+    dto.setStatus(entity.getStatus());
+    dto.setTeamAScore(entity.getTeamAScore());
+    dto.setTeamBScore(entity.getTeamBScore());
+    dto.setWinner(entity.getWinner());
     dto.setTeams(teamMap.teamEntityList2DtoList(entity.getMatchTeams()));
 
     return dto;

@@ -33,7 +33,8 @@ public class TeamTournament implements Serializable {
           CascadeType.DETACH,
           CascadeType.MERGE,
           CascadeType.REFRESH,
-          CascadeType.PERSIST})
+          CascadeType.PERSIST
+      })
   @JoinColumn(name = "TEAM_ID")
   private TeamEntity team;
 
@@ -43,7 +44,8 @@ public class TeamTournament implements Serializable {
           CascadeType.DETACH,
           CascadeType.MERGE,
           CascadeType.REFRESH,
-          CascadeType.PERSIST})
+          CascadeType.PERSIST
+      })
   @JoinColumn(name = "TOURNAMENT_ID")
   private TournamentEntity tournament;
 
