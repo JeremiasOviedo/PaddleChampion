@@ -1,4 +1,6 @@
 # PaddleChampion
+
+![PaddleChampion-Logo](https://jeremiasoviedo.github.io/images/logo-no-background.png)
 Restful API used to create paddle tournaments.
 
 # I am currently working on this project :wrench:
