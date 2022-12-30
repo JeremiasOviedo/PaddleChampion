@@ -76,6 +76,26 @@ When you have all your teams added you are ready to begin! I implemented a round
 
 ![Creating-Fixture](https://i.imgur.com/5IU791t.png)
 
+## Match Info
+
+You can view more detail info of a match using the match controller
+
+![Match-Info](https://i.imgur.com/FjpWGHf.png)
+
+## Updating a match
+
+When a match is finished you can load the result, this will automatically set the match status to finished and select the winner depending on the result.
+
+![Updating-a-Match](https://i.imgur.com/9nRy3ez.png)
+
+## Positions table
+
+I created an algorithm that get all the matches in the tournament with the Status FINISHED and makes a positions table based on the results.
+
+![Positions-Table](https://i.imgur.com/sBENh2n.png)
+
+
+
 # TO DO--
 So far this is what ive done with this API, im currently working on it and learning new things every day.
 Some of the next features i need to add are:
