@@ -81,8 +81,8 @@ So far this is what ive done with this API, im currently working on it and learn
 Some of the next features i need to add are:
 
 <ul>
-<li>Update the matches when finished</li>
-<li>Create an algorithm that automatically updates the positions table based on the results of the matches</li>
+<li>Update the matches when finished :heavy_check_mark: DONE</li>
+<li>Create an algorithm that automatically updates the positions table based on the results of the matches. :heavy_check_mark: DONE</li>
 <li>When finished the round robin phase, begin the Knockout Phase with an algorithm that create the brackets based on the positons table.</li>
 <li>Implement a reward system</li>
 <li>Implement fictional cash fees to enter the tournaments and create a cash pool with all the inscriptions, this pool will be the reward for the winner</li>
