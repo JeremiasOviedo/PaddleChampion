@@ -1,21 +1,17 @@
 package com.jeremias.paddlechampion.dto;
 
 import com.jeremias.paddlechampion.enumeration.Status;
-import java.util.List;
 import lombok.Getter;
 import lombok.Setter;
 
 @Getter
 @Setter
-public class MatchDto {
+public class MatchBasicDto {
 
-  private Long matchId;
+  private Long id;
   private String teamA;
   private String teamB;
   private Status status;
-  private Integer teamAScore;
-  private Integer teamBScore;
   private String winner;
-  private List<TeamDto> teamsInfo;
 
 }

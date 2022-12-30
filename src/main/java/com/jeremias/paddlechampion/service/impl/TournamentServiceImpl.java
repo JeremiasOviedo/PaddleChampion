@@ -1,29 +1,44 @@
 package com.jeremias.paddlechampion.service.impl;
 
+import static java.util.Collections.reverse;
+
+import com.jeremias.paddlechampion.dto.MatchBasicDto;
 import com.jeremias.paddlechampion.dto.MatchDto;
+import com.jeremias.paddlechampion.dto.TeamDto;
+import com.jeremias.paddlechampion.dto.TeamTournamentDto;
 import com.jeremias.paddlechampion.dto.TournamentDto;
 import com.jeremias.paddlechampion.entity.TeamEntity;
 import com.jeremias.paddlechampion.entity.TeamTournament;
 import com.jeremias.paddlechampion.entity.TournamentEntity;
+import com.jeremias.paddlechampion.entity.UserEntity;
+import com.jeremias.paddlechampion.enumeration.Inscription;
 import com.jeremias.paddlechampion.enumeration.Status;
 import com.jeremias.paddlechampion.mapper.MatchMap;
+import com.jeremias.paddlechampion.mapper.TeamMap;
+import com.jeremias.paddlechampion.mapper.TeamTournamentMap;
 import com.jeremias.paddlechampion.mapper.TournamentMap;
 import com.jeremias.paddlechampion.mapper.exception.MatchesException;
 import com.jeremias.paddlechampion.mapper.exception.ParamNotFound;
 import com.jeremias.paddlechampion.entity.MatchEntity;
 import com.jeremias.paddlechampion.repository.MatchRepository;
 import com.jeremias.paddlechampion.repository.TeamRepository;
+import com.jeremias.paddlechampion.repository.TeamTournamentRepository;
 import com.jeremias.paddlechampion.repository.TournamentRepository;
+import com.jeremias.paddlechampion.repository.UserRepository;
 import com.jeremias.paddlechampion.service.ITeamTournamentService;
 import com.jeremias.paddlechampion.service.ITournamentService;
+import java.sql.Date;
 import java.util.ArrayList;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 @Service
 public class TournamentServiceImpl implements ITournamentService {
 
+  @Autowired
+  private TeamTournamentRepository teamTournamentRepo;
   @Autowired
   private MatchRepository matchRepo;
   @Autowired
@@ -32,18 +47,33 @@ public class TournamentServiceImpl implements ITournamentService {
   private TeamRepository teamRepo;
 
   @Autowired
+  private UserRepository userRepo;
+
+  @Autowired
   private ITeamTournamentService teamTournamentService;
+
   @Autowired
   TournamentMap tournamentMap;
   @Autowired
   MatchMap matchMap;
 
+  @Autowired
+  TeamMap teamMap;
+
+  @Autowired
+  TeamTournamentMap teamTournamentMap;
+
   @Override
   public TournamentDto createTournament(TournamentDto dto) {
-    TournamentEntity entity = tournamentMap.tournamentDto2Entity(dto);
-    tournamentRepo.save(entity);
 
-    return dto;
+    String userEmail = SecurityContextHolder.getContext().getAuthentication().getName();
+    UserEntity user = userRepo.findByEmail(userEmail);
+
+    TournamentEntity entity = tournamentMap.tournamentDto2Entity(dto);
+    entity.setUser(user);
+    entity.setInscriptionStatus(Inscription.OPEN);
+
+    return tournamentMap.tournamentEntity2Dto(tournamentRepo.save(entity));
   }
 
   @Override
@@ -69,7 +99,7 @@ public class TournamentServiceImpl implements ITournamentService {
   }
 
   @Override
-  public List<MatchDto> createFixture(Long id) {
+  public List<MatchBasicDto> listMatches(Long id) {
 
     TournamentEntity tournament = tournamentRepo.findById(id).orElseThrow(
         () -> new ParamNotFound("Tournament ID is invalid"));
@@ -78,7 +108,7 @@ public class TournamentServiceImpl implements ITournamentService {
 
     if (!tournament.getMatchEntities().isEmpty()) {
 
-      throw new MatchesException("The matches are already created");
+      return matchMap.matchEntityList2BasicDto(tournament.getMatchEntities());
 
     }
 
@@ -121,7 +151,7 @@ public class TournamentServiceImpl implements ITournamentService {
 
     }
 
-    return matchMap.matchEntityList2Dto(matchEntities);
+    return matchMap.matchEntityList2BasicDto(matchEntities);
   }
 
   @Override
@@ -163,4 +193,98 @@ public class TournamentServiceImpl implements ITournamentService {
 
     return teams;
   }
+
+  public List<TeamDto> getTeamsDto(Long id) {
+
+    return teamMap.teamEntityList2DtoList(this.getTeams(id));
+  }
+
+  public void updateTeamTournaments(Long id) {
+
+    TournamentEntity tournament = tournamentRepo.findById(id).orElseThrow(
+        () -> new ParamNotFound("Tournament ID is invalid"));
+
+    List<MatchEntity> matches = new ArrayList<>();
+    matches.addAll(tournament.getMatchEntities());
+    List<TeamTournament> teamTournaments = new ArrayList<>();
+
+    for (TeamTournament teamTournament : tournament.getTeamTournaments()) {
+
+      teamTournament.setMatchesPlayed(0);
+      teamTournament.setMatchesLost(0);
+      teamTournament.setMatchesWon(0);
+      teamTournament.setPoints(0);
+
+
+    }
+
+    for (MatchEntity match : matches) {
+
+      if (match.getStatus().equals(Status.FINISHED)) {
+
+        TeamEntity teamA = teamRepo.findByName(match.getTeamA());
+        TeamEntity teamB = teamRepo.findByName(match.getTeamB());
+
+        TeamTournament teamTournamentA = teamTournamentRepo.findByTournamentAndTeam(tournament,
+            teamA);
+        TeamTournament teamTournamentB = teamTournamentRepo.findByTournamentAndTeam(tournament,
+            teamB);
+
+        teamTournamentA.setMatchesPlayed((teamTournamentA.getMatchesPlayed() + 1));
+        teamTournamentB.setMatchesPlayed((teamTournamentB.getMatchesPlayed() + 1));
+
+        if (match.getWinner().equals(teamA.getName())) {
+          teamTournamentA.setMatchesWon((teamTournamentA.getMatchesWon() + 1));
+          teamTournamentB.setMatchesLost((teamTournamentB.getMatchesLost() + 1));
+
+          teamTournamentA.setPoints((teamTournamentA.getPoints() + 3));
+
+        } else {
+          teamTournamentB.setMatchesWon((teamTournamentB.getMatchesWon() + 1));
+          teamTournamentA.setMatchesLost((teamTournamentA.getMatchesLost() + 1));
+
+          teamTournamentB.setPoints((teamTournamentB.getPoints() + 3));
+        }
+
+        teamTournamentRepo.save(teamTournamentA);
+        teamTournamentRepo.save(teamTournamentB);
+
+      }
+    }
+  }
+
+
+  public List<TeamTournamentDto> getPositionsTable(Long id) {
+
+    this.updateTeamTournaments(id);
+
+    TournamentEntity tournament = tournamentRepo.findById(id).orElseThrow(
+        () -> new ParamNotFound("Tournament ID is invalid"));
+
+    List<TeamTournament> teamTournaments = new ArrayList<>();
+
+    teamTournaments.addAll(tournament.getTeamTournaments());
+
+    teamTournaments.sort((o1, o2) -> o1.getPoints().compareTo(o2.getPoints()));
+
+    reverse(teamTournaments);
+
+    List<TeamTournamentDto> dtos = teamTournamentMap.teamTournamentList2Dto(teamTournaments);
+
+
+    int index = 1;
+    for (TeamTournamentDto teamTournamentDto : dtos) {
+
+
+      teamTournamentDto.setPosition(index);
+
+index++;
+
+    }
+
+    return dtos;
+  }
+
+
 }
+

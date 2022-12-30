@@ -1,5 +1,6 @@
 package com.jeremias.paddlechampion.service.impl;
 
+import com.jeremias.paddlechampion.entity.MatchEntity;
 import com.jeremias.paddlechampion.entity.TeamEntity;
 import com.jeremias.paddlechampion.entity.TeamTournament;
 import com.jeremias.paddlechampion.entity.TournamentEntity;
@@ -10,7 +11,9 @@ import com.jeremias.paddlechampion.repository.TeamTournamentRepository;
 import com.jeremias.paddlechampion.repository.TournamentRepository;
 import com.jeremias.paddlechampion.service.ITeamTournamentService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
+@Service
 public class TeamTournamentServiceImpl implements ITeamTournamentService {
 
   @Autowired
@@ -39,8 +42,14 @@ public class TeamTournamentServiceImpl implements ITeamTournamentService {
 
       teamTournament.setTournament(tournament);
       teamTournament.setTeam(team);
+      tournament.getTeamTournaments().add(teamTournament);
+      team.getTeamTournament().add(teamTournament);
 
       teamTournamentRepo.save(teamTournament);
+      tournamentRepo.save(tournament);
+      teamRepo.save(team);
+
+
     }
 
   }
@@ -55,6 +64,11 @@ public class TeamTournamentServiceImpl implements ITeamTournamentService {
     TeamTournament teamTournament = teamTournamentRepo.findByTournamentAndTeam(tournament, team);
 
     teamTournamentRepo.delete(teamTournament);
+
+  }
+
+  @Override
+  public void updateFromMatch(MatchEntity match) {
 
   }
 }

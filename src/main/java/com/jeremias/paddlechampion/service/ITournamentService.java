@@ -1,9 +1,9 @@
 package com.jeremias.paddlechampion.service;
 
 
+import com.jeremias.paddlechampion.dto.MatchBasicDto;
 import com.jeremias.paddlechampion.dto.MatchDto;
 import com.jeremias.paddlechampion.dto.TournamentDto;
-import com.jeremias.paddlechampion.entity.MatchEntity;
 import com.jeremias.paddlechampion.entity.TeamEntity;
 import java.util.List;
 
@@ -17,7 +17,7 @@ public interface ITournamentService {
 
   void deleteTeam(Long tournamentId, Long teamId);
 
-  List<MatchDto> createFixture(Long id);
+  List<MatchBasicDto> listMatches(Long id);
 
   void delete(Long id);
 

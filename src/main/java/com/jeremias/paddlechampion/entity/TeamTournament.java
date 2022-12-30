@@ -33,7 +33,8 @@ public class TeamTournament implements Serializable {
           CascadeType.DETACH,
           CascadeType.MERGE,
           CascadeType.REFRESH,
-          CascadeType.PERSIST})
+          CascadeType.PERSIST
+      })
   @JoinColumn(name = "TEAM_ID")
   private TeamEntity team;
 
@@ -43,21 +44,22 @@ public class TeamTournament implements Serializable {
           CascadeType.DETACH,
           CascadeType.MERGE,
           CascadeType.REFRESH,
-          CascadeType.PERSIST})
+          CascadeType.PERSIST
+      })
   @JoinColumn(name = "TOURNAMENT_ID")
   private TournamentEntity tournament;
 
   @Column(name = "MATCHES_PLAYED")
-  private Integer matchesPlayed;
+  private Integer matchesPlayed = 0;
 
   @Column(name = "MATCHES_WON")
-  private Integer matchesWon;
+  private Integer matchesWon = 0;
 
   @Column(name = "MATCHES_LOST")
-  private Integer matchesLost;
+  private Integer matchesLost = 0;
 
   @Column(name = "POINTS")
-  private Integer points;
+  private Integer points = 0;
 
 }
 
