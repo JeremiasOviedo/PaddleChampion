@@ -50,16 +50,16 @@ public class TeamTournament implements Serializable {
   private TournamentEntity tournament;
 
   @Column(name = "MATCHES_PLAYED")
-  private Integer matchesPlayed;
+  private Integer matchesPlayed = 0;
 
   @Column(name = "MATCHES_WON")
-  private Integer matchesWon;
+  private Integer matchesWon = 0;
 
   @Column(name = "MATCHES_LOST")
-  private Integer matchesLost;
+  private Integer matchesLost = 0;
 
   @Column(name = "POINTS")
-  private Integer points;
+  private Integer points = 0;
 
 }
 

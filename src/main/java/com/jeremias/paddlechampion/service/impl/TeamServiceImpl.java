@@ -95,7 +95,7 @@ public class TeamServiceImpl implements ITeamService {
   }
 
   @Override
-  public UserDto addPlayer(AddPlayer2TeamDto dto) {
+  public TeamDto addPlayer(AddPlayer2TeamDto dto) {
 
     TeamEntity team = teamRepo.findById(dto.getTeamId()).orElseThrow(
         () -> new ParamNotFound("Team ID is invalid"));
@@ -111,7 +111,7 @@ public class TeamServiceImpl implements ITeamService {
     userRepo.save(player);
     teamRepo.save(team);
 
-    return userMap.userEntity2Dto(player);
+    return teamMap.teamEntity2Dto(team);
   }
 
 

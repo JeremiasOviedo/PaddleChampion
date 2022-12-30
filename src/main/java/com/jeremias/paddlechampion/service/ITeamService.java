@@ -19,6 +19,6 @@ public interface ITeamService {
 
   PageDto<TeamDto> findAll(Pageable pageable, HttpServletRequest request);
 
-  UserDto addPlayer(AddPlayer2TeamDto dto);
+ TeamDto addPlayer(AddPlayer2TeamDto dto);
 
 }

@@ -9,12 +9,15 @@ import com.jeremias.paddlechampion.mapper.exception.ParamNotFound;
 import com.jeremias.paddlechampion.repository.MatchRepository;
 import com.jeremias.paddlechampion.service.IMatchService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
+@Service
 public class MatchServiceImpl implements IMatchService {
 
   @Autowired
   MatchRepository matchRepo;
 
+  @Autowired
   MatchMap matchMap;
 
   @Override
@@ -26,7 +29,6 @@ public class MatchServiceImpl implements IMatchService {
       throw new MatchesException("Scores cannot be equal");
 
     }
-
     match.setTeamAScore(dto.getTeamAScore());
     match.setTeamBScore(dto.getTeamBScore());
 
@@ -55,6 +57,10 @@ public class MatchServiceImpl implements IMatchService {
 
   @Override
   public MatchDto getMatch(Long id) {
-    return null;
+    MatchEntity entity = matchRepo.findById(id).orElseThrow(
+        ()-> new ParamNotFound("the match ID is invalid"));
+
+
+    return matchMap.matchEntity2Dto(entity);
   }
 }

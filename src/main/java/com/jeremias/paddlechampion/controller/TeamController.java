@@ -31,14 +31,13 @@ public class TeamController {
   }
   @PreAuthorize("hasAnyRole('USER','ADMIN')")
   @PostMapping("/addPlayer")
-  public ResponseEntity<AddPlayer2TeamDto> addPlayer(AddPlayer2TeamDto dto) {
+  public ResponseEntity<TeamDto> addPlayer(AddPlayer2TeamDto dto) {
 
-    teamService.addPlayer(dto);
 
-    return ResponseEntity.status(HttpStatus.CREATED).body(dto);
+    return ResponseEntity.status(HttpStatus.CREATED).body(teamService.addPlayer(dto));
   }
   @PreAuthorize("hasAnyRole('USER','ADMIN')")
-  @GetMapping("/info/{teamId}")
+  @GetMapping("/{teamId}")
   public ResponseEntity<TeamDto> getTeam(@PathVariable(name = "teamId") Long teamId) {
 
     TeamDto dto = teamService.getTeam(teamId);

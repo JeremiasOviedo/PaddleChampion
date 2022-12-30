@@ -1,5 +1,6 @@
 package com.jeremias.paddlechampion.service.impl;
 
+import com.jeremias.paddlechampion.entity.MatchEntity;
 import com.jeremias.paddlechampion.entity.TeamEntity;
 import com.jeremias.paddlechampion.entity.TeamTournament;
 import com.jeremias.paddlechampion.entity.TournamentEntity;
@@ -63,6 +64,11 @@ public class TeamTournamentServiceImpl implements ITeamTournamentService {
     TeamTournament teamTournament = teamTournamentRepo.findByTournamentAndTeam(tournament, team);
 
     teamTournamentRepo.delete(teamTournament);
+
+  }
+
+  @Override
+  public void updateFromMatch(MatchEntity match) {
 
   }
 }

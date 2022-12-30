@@ -15,8 +15,6 @@ public class TournamentDto {
   private Integer MaxCategory;
   private Integer MaxTeams;
   private Inscription inscriptionStatus;
-  private List<TeamDto> teams;
-  private List<MatchDto> matchEntities;
   private UserDto creator;
 
 }
