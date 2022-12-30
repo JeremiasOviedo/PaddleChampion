@@ -199,7 +199,7 @@ public class TournamentServiceImpl implements ITournamentService {
     return teamMap.teamEntityList2DtoList(this.getTeams(id));
   }
 
-  public void updatePositionsTable(Long id) {
+  public void updateTeamTournaments(Long id) {
 
     TournamentEntity tournament = tournamentRepo.findById(id).orElseThrow(
         () -> new ParamNotFound("Tournament ID is invalid"));
@@ -254,9 +254,9 @@ public class TournamentServiceImpl implements ITournamentService {
   }
 
 
-  public List<TeamTournamentDto> teamTournamentList(Long id) {
+  public List<TeamTournamentDto> getPositionsTable(Long id) {
 
-    this.updatePositionsTable(id);
+    this.updateTeamTournaments(id);
 
     TournamentEntity tournament = tournamentRepo.findById(id).orElseThrow(
         () -> new ParamNotFound("Tournament ID is invalid"));

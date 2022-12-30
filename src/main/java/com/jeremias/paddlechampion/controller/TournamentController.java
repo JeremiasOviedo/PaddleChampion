@@ -82,7 +82,7 @@ public class TournamentController {
   @GetMapping("/{tournamentId}/positions")
   public ResponseEntity<List<TeamTournamentDto>> positions(@PathVariable Long tournamentId){
 
-    List <TeamTournamentDto> positions = tournamentService.teamTournamentList(tournamentId);
+    List <TeamTournamentDto> positions = tournamentService.getPositionsTable(tournamentId);
 
     return ResponseEntity.status(HttpStatus.OK).body(positions);
   }
