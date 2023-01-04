@@ -19,11 +19,12 @@ Restful API used to create paddle tournaments.
 <li>MySQL Workbench for DB visualization</li>
 </ul>
 
-*These are some functionalities i finished, i'm currently working and progressing in additional features*
+
 
 
 ### :collision: :star2: I'm currently working on Swagger documentation, for the moment i will upload some postman images and describing the endpoints here  :star2: :collision:
 
+*These are some functionalities i finished*
 ## Registration 
 
 I implemented Spring Security with JWT, you need to create a user and login to get full access to the endpoints
