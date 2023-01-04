@@ -1,20 +1,15 @@
 package com.jeremias.paddlechampion.auth.controller;
 
-import com.jeremias.paddlechampion.auth.dto.AuthenticationRequest;
-import com.jeremias.paddlechampion.auth.dto.AuthenticationResponse;
-import com.jeremias.paddlechampion.auth.dto.ResponseUserDto;
-import com.jeremias.paddlechampion.auth.dto.UserAuthDto;
+import com.jeremias.paddlechampion.auth.dto.*;
 import com.jeremias.paddlechampion.auth.service.JwtUtils;
 import com.jeremias.paddlechampion.auth.service.UserDetailsCustomService;
-import com.jeremias.paddlechampion.auth.service.UserDetailsImpl;
-import com.jeremias.paddlechampion.service.IUserService;
+
 import javax.validation.Valid;
 
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -29,7 +24,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/auth")
 @RequiredArgsConstructor
-public class UserAuthController {
+public class AuthenticationController {
 
   private final UserDetailsCustomService userDetailsServices;
   private final AuthenticationManager authenticationManager;
@@ -40,7 +35,7 @@ public class UserAuthController {
   @PostMapping("/register")
   @ApiOperation(value = "Register as a user",
           notes = "Create an account filling the form")
-  public ResponseEntity<ResponseUserDto> signUp(@Valid @RequestBody ResponseUserDto user) {
+  public ResponseEntity<ResponseUserDto> signUp(@Valid @RequestBody UserRegistrationDto user) {
     ResponseUserDto userRegister = this.userDetailsServices.save(user);
     return ResponseEntity.status(HttpStatus.CREATED).body(userRegister);
   }
@@ -49,9 +44,10 @@ public class UserAuthController {
   @PostMapping("/registerAdmin")
   @ApiOperation(value = "Register as an Admin",
           notes = "Create an account filling the form, the role will be Admin in this case")
-  public ResponseEntity<AuthenticationResponse> signUpAdmin(@Valid @RequestBody UserAuthDto user) {
-    this.userDetailsServices.saveAdmin(user);
-    return ResponseEntity.status(HttpStatus.CREATED).build();
+  public ResponseEntity<ResponseUserDto> signUpAdmin(@Valid @RequestBody UserRegistrationDto user) {
+
+    ResponseUserDto userRegister = this.userDetailsServices.saveAdmin(user);
+   return ResponseEntity.status(HttpStatus.CREATED).body(userRegister);
   }
 
   @PostMapping("/login")

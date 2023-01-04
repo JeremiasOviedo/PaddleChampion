@@ -1,7 +1,7 @@
 package com.jeremias.paddlechampion.auth.service;
 
 import com.jeremias.paddlechampion.auth.dto.ResponseUserDto;
-import com.jeremias.paddlechampion.auth.dto.UserAuthDto;
+import com.jeremias.paddlechampion.auth.dto.UserRegistrationDto;
 import com.jeremias.paddlechampion.entity.RoleEntity;
 import com.jeremias.paddlechampion.entity.UserEntity;
 import com.jeremias.paddlechampion.enumeration.RoleName;
@@ -36,16 +36,29 @@ public class UserDetailsCustomService implements UserDetailsService {
     return UserDetailsImpl.build(userEntity);
   }
 
-  public ResponseUserDto save(@Valid ResponseUserDto userDto) throws RepeatedUsername {
+  public ResponseUserDto save(@Valid UserRegistrationDto userDto) throws RepeatedUsername {
+
+    BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();
+
     if (userRepo.findByEmail(userDto.getEmail()) != null) {
-      throw new RepeatedUsername("repeated user");
+      throw new RepeatedUsername("email already exist");
     }
-    UserEntity entity = userMap.userAuthDto2Entity(userDto);
+
+    if (!userDto.getPassword().equals(userDto.getPasswordConfirm()) ){
+
+      throw new RuntimeException("Passwords dont coincide");
+    }
+    UserEntity userEntity = new UserEntity();
+    userEntity.setEmail(userDto.getEmail());
+    userEntity.setPassword(bCryptPasswordEncoder.encode(userDto.getPassword()));
+    userEntity.setFirstName(userDto.getFirstName());
+    userEntity.setLastName(userDto.getLastName());
+    userEntity.setCategory(userDto.getCategory());
 
     RoleEntity role = roleRepo.findByName(RoleName.ROLE_USER);
-    entity.setRole(role);
+    userEntity.setRole(role);
 
-    UserEntity entitySaved = this.userRepo.save(entity);
+    UserEntity entitySaved = this.userRepo.save(userEntity);
 
 
     ResponseUserDto responseUserDto = userMap.userAuthEntity2Dto(entitySaved);
@@ -56,19 +69,32 @@ public class UserDetailsCustomService implements UserDetailsService {
 
   }
 
-  public void saveAdmin(@Valid UserAuthDto userDto) throws RepeatedUsername {
+  public ResponseUserDto saveAdmin(@Valid UserRegistrationDto userDto) throws RepeatedUsername {
     BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();
 
     if (userRepo.findByEmail(userDto.getEmail()) != null) {
-      throw new RepeatedUsername("Username repetido");
+      throw new RepeatedUsername("email already exist");
+    }
+    if (!userDto.getPassword().equals(userDto.getPasswordConfirm())){
+
+      throw new RuntimeException("Passwords dont coincide");
     }
     UserEntity userEntity = new UserEntity();
     userEntity.setEmail(userDto.getEmail());
     userEntity.setPassword(bCryptPasswordEncoder.encode(userDto.getPassword()));
     userEntity.setFirstName(userDto.getFirstName());
     userEntity.setLastName(userDto.getLastName());
+    userEntity.setCategory(userDto.getCategory());
     userEntity.setRole(roleRepo.findByName(RoleName.ROLE_ADMIN));
-    userEntity = this.userRepo.save(userEntity);
+
+    UserEntity entitySaved = this.userRepo.save(userEntity);
+
+
+    ResponseUserDto responseUserDto = userMap.userAuthEntity2Dto(entitySaved);
+
+
+    return responseUserDto;
+
   }
 
 

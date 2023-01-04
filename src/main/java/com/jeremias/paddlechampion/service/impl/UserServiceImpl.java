@@ -1,85 +1,150 @@
 package com.jeremias.paddlechampion.service.impl;
 
+import com.jeremias.paddlechampion.auth.dto.ResponseUserDto;
+import com.jeremias.paddlechampion.auth.dto.UserRegistrationDto;
 import com.jeremias.paddlechampion.dto.PageDto;
 import com.jeremias.paddlechampion.dto.UserDto;
+import com.jeremias.paddlechampion.entity.RoleEntity;
+import com.jeremias.paddlechampion.entity.TeamEntity;
 import com.jeremias.paddlechampion.entity.UserEntity;
+import com.jeremias.paddlechampion.enumeration.RoleName;
 import com.jeremias.paddlechampion.mapper.TeamMap;
 import com.jeremias.paddlechampion.mapper.UserMap;
 import com.jeremias.paddlechampion.mapper.exception.ParamNotFound;
+import com.jeremias.paddlechampion.repository.RoleRepository;
+import com.jeremias.paddlechampion.repository.TeamRepository;
 import com.jeremias.paddlechampion.repository.UserRepository;
 import com.jeremias.paddlechampion.service.IUserService;
+
 import java.util.Collection;
 import java.util.List;
 import java.util.Set;
 import javax.servlet.http.HttpServletRequest;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 @Service
 public class UserServiceImpl implements IUserService {
 
-  @Autowired
-  private UserRepository userRepo;
-  @Autowired
-  private UserMap userMap;
-  @Autowired
-  private TeamMap teamMap;
+    @Autowired
+    private UserRepository userRepo;
+    @Autowired
+    private UserMap userMap;
+    @Autowired
+    private TeamMap teamMap;
+    @Autowired
+    private TeamRepository teamRepository;
+    @Autowired
+    private RoleRepository roleRepository;
 
 
-  public UserDto save(UserDto dto) {
+    public UserDto save(UserDto dto) {
 
-    UserEntity entity = userMap.userDto2Entity(dto);
+        UserEntity entity = userMap.userDto2Entity(dto);
 
-    userRepo.save(entity);
+        userRepo.save(entity);
 
-    return dto;
-  }
+        return dto;
+    }
 
-  @Override
-  public List<UserDto> listAllUsers() {
+    @Override
+    public List<UserDto> listAllUsers() {
 
-    List<UserEntity> entities = userRepo.findAll();
-    List<UserDto> dtos = userMap.userEntityList2DtoList(entities);
+        List<UserEntity> entities = userRepo.findAll();
+        List<UserDto> dtos = userMap.userEntityList2DtoList(entities);
 
-    return dtos;
-  }
+        return dtos;
+    }
 
-  @Override
-  public UserDto findById(Long id) {
+    @Override
+    public ResponseUserDto getUser(Long id) {
 
-    UserEntity entity = userRepo.findById(id).orElseThrow(
-        () -> new ParamNotFound("User ID invalid"));
-    UserDto user = userMap.userEntity2Dto(entity);
-    return user;
+        UserEntity entity = userRepo.findById(id).orElseThrow(
+                () -> new ParamNotFound("User ID invalid"));
+        ResponseUserDto user = userMap.userAuthEntity2Dto(entity);
 
-  }
+        return user;
 
-  @Override
-  public PageDto<UserDto> findAllUsers(Pageable pageable, HttpServletRequest request) {
-    return null;
-  }
+    }
 
-  @Override
-  public void delete(Long id) {
+    @Override
+    public PageDto<ResponseUserDto> findAllUsers(Pageable pageable, HttpServletRequest request) {
+        return null;
+    }
 
-    UserEntity entity = userRepo.findById(id).orElseThrow(
-        () -> new ParamNotFound("User ID is invalid"));
-    userRepo.deleteById(id);
-  }
+    @Override
+    public boolean delete(Long id) {
 
-  @Override
-  public UserDto update(Long id, UserDto dto) {
-    UserEntity entity = userRepo.findByUserId(id);
+        UserEntity entity = userRepo.findById(id).orElseThrow(
+                () -> new ParamNotFound("User ID is invalid"));
 
-    entity.setFirstName(dto.getFirstName());
-    entity.setLastName(dto.getLastName());
-    entity.setEmail(dto.getEmail());
-    entity.setCategory(dto.getCategory());
-   // entity.setTeams(teamMap.teamDto2EntityList(dto.getTeams()));
+        String userEmail = SecurityContextHolder.getContext().getAuthentication().getName();
+        RoleEntity isAdmin = roleRepository.findByName(RoleName.ROLE_ADMIN);
+        UserEntity user = userRepo.findByEmail(userEmail);
 
-    userRepo.save(entity);
 
-    return dto;
-  }
+        if (user == entity || user.getRole() == isAdmin) {
+            List<TeamEntity> teams = entity.getTeams();
+
+            for (TeamEntity team : teams) {
+                team.deleteUserFromTeam(entity);
+                teamRepository.save(team);
+            }
+
+            RoleEntity role = entity.getRole();
+            role.getUsers().remove(entity);
+
+            userRepo.delete(entity);
+
+            return true;
+        }
+
+        return false;
+    }
+
+    @Override
+    public ResponseUserDto update(Long id, UserRegistrationDto dto) {
+        BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();
+
+        UserEntity entity = userRepo.findById(id).orElseThrow(
+                () -> new ParamNotFound("User ID is invalid"));
+
+        String userEmail = SecurityContextHolder.getContext().getAuthentication().getName();
+        UserEntity user = userRepo.findByEmail(userEmail);
+
+        if (user != entity) {
+            throw new RuntimeException("You can only update your own information");
+        }
+
+
+        if (dto.getFirstName() != null) {
+            entity.setFirstName(dto.getFirstName());
+        }
+        if (dto.getLastName() != null) {
+            entity.setLastName(dto.getLastName());
+        }
+        if (dto.getEmail() != null) {
+            entity.setEmail(dto.getEmail());
+        }
+        if (dto.getCategory() != null) {
+            entity.setCategory(dto.getCategory());
+        }
+        if (dto.getPassword() != null) {
+
+            if (dto.getPassword().equals(dto.getPasswordConfirm())) {
+                entity.setPassword(bCryptPasswordEncoder.encode(dto.getPassword()));
+
+            } else throw new ParamNotFound("Passwords must coincide");
+
+        }
+
+
+        UserEntity entitySaved = userRepo.save(entity);
+
+        return userMap.userAuthEntity2Dto(entity);
+    }
 }

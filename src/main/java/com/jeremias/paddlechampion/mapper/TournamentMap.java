@@ -1,10 +1,13 @@
 package com.jeremias.paddlechampion.mapper;
 
+import com.jeremias.paddlechampion.dto.TournamentBasicDto;
 import com.jeremias.paddlechampion.dto.TournamentDto;
 import com.jeremias.paddlechampion.entity.TournamentEntity;
 import com.jeremias.paddlechampion.service.ITournamentService;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -46,7 +49,28 @@ public class TournamentMap {
     return entity;
   }
 
+  public TournamentBasicDto tournamentEntity2BasicDto(TournamentEntity entity) {
+    TournamentBasicDto dto = new TournamentBasicDto();
+
+   dto.setId(entity.getTournamentId());
+   dto.setName(entity.getName());
+
+   return dto;
+
+  }
+
+
   public List<TournamentDto> tournamentEntityList2DtoList(List<TournamentEntity> entities) {
+    List<TournamentDto> dtos = new ArrayList<>();
+
+    for (TournamentEntity entity : entities) {
+      dtos.add(tournamentEntity2Dto(entity));
+    }
+
+    return dtos;
+  }
+
+  public List<TournamentDto> tournamentEntitySet2DtoList(Set<TournamentEntity> entities) {
     List<TournamentDto> dtos = new ArrayList<>();
 
     for (TournamentEntity entity : entities) {
@@ -65,6 +89,16 @@ public class TournamentMap {
     }
 
     return entities;
+  }
+
+  public List<TournamentBasicDto> tournamentEntitySet2BasicDtoList(Set<TournamentEntity> entities) {
+    List<TournamentBasicDto> dtos = new ArrayList<>();
+
+    for (TournamentEntity entity : entities) {
+      dtos.add(tournamentEntity2BasicDto(entity));
+    }
+
+    return dtos;
   }
 
 }
