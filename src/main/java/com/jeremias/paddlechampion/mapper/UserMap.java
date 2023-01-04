@@ -6,13 +6,19 @@ import com.jeremias.paddlechampion.entity.UserEntity;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Component;
 
 @Component
 public class UserMap {
 
+  @Autowired
   TeamMap teamMap;
+
+  @Autowired
+  TournamentMap tournamentMap;
 
   public UserDto userEntity2Dto(UserEntity entity) {
 
@@ -90,6 +96,15 @@ public class UserMap {
     dto.setCreationDate(entitySaved.getCreationDate());
     dto.setCategory(entitySaved.getCategory());
     dto.setPassword("[PROTECTED]");
+
+    if (entitySaved.getTeams() != null){
+      dto.setTeams(teamMap.teamEntityList2BasicDtoList(entitySaved.getTeams()));
+    }
+
+    if (entitySaved.getTournaments() != null){
+      dto.setTournaments(tournamentMap.tournamentEntitySet2BasicDtoList(entitySaved.getTournaments()));
+    }
+
     return dto;
   }
 

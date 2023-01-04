@@ -1,7 +1,7 @@
 package com.jeremias.paddlechampion.auth.dto;
 
-import com.jeremias.paddlechampion.dto.TeamDto;
-import com.jeremias.paddlechampion.dto.TournamentDto;
+import com.jeremias.paddlechampion.dto.TeamBasicDto;
+import com.jeremias.paddlechampion.dto.TournamentBasicDto;
 import com.jeremias.paddlechampion.enumeration.RoleName;
 import java.sql.Date;
 import java.util.List;
@@ -29,10 +29,11 @@ public class ResponseUserDto {
   @NotEmpty
   private String password;
   private RoleName role;
-  private List<TeamDto> teams;
-  private List<TournamentDto> tournaments;
   private Integer category;
+  private List<TeamBasicDto> teams;
+  private List<TournamentBasicDto> tournaments;
+
   private Date creationDate;
   private Date updateDate;
-  private String jwt;
+
 }

@@ -1,5 +1,7 @@
 package com.jeremias.paddlechampion.service;
 
+import com.jeremias.paddlechampion.auth.dto.ResponseUserDto;
+import com.jeremias.paddlechampion.auth.dto.UserRegistrationDto;
 import com.jeremias.paddlechampion.dto.PageDto;
 import com.jeremias.paddlechampion.dto.UserDto;
 import com.jeremias.paddlechampion.repository.UserRepository;
@@ -15,12 +17,13 @@ public interface IUserService {
 
   List<UserDto> listAllUsers();
 
-  UserDto findById(Long id);
+  ResponseUserDto getUser(Long id);
 
-  PageDto<UserDto> findAllUsers(Pageable pageable, HttpServletRequest request);
+  PageDto<ResponseUserDto> findAllUsers(Pageable pageable, HttpServletRequest request);
 
-  void delete(Long id);
+  boolean delete(Long id);
 
-  UserDto update(Long id, UserDto dto);
+  ResponseUserDto update(Long id, UserRegistrationDto dto);
 
 }
+
