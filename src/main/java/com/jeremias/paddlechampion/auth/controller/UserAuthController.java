@@ -9,6 +9,10 @@ import com.jeremias.paddlechampion.auth.service.UserDetailsCustomService;
 import com.jeremias.paddlechampion.auth.service.UserDetailsImpl;
 import com.jeremias.paddlechampion.service.IUserService;
 import javax.validation.Valid;
+
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -34,6 +38,8 @@ public class UserAuthController {
 
 
   @PostMapping("/register")
+  @ApiOperation(value = "Register as a user",
+          notes = "Create an account filling the form")
   public ResponseEntity<ResponseUserDto> signUp(@Valid @RequestBody ResponseUserDto user) {
     ResponseUserDto userRegister = this.userDetailsServices.save(user);
     return ResponseEntity.status(HttpStatus.CREATED).body(userRegister);
@@ -41,12 +47,20 @@ public class UserAuthController {
 
 
   @PostMapping("/registerAdmin")
+  @ApiOperation(value = "Register as an Admin",
+          notes = "Create an account filling the form, the role will be Admin in this case")
   public ResponseEntity<AuthenticationResponse> signUpAdmin(@Valid @RequestBody UserAuthDto user) {
     this.userDetailsServices.saveAdmin(user);
     return ResponseEntity.status(HttpStatus.CREATED).build();
   }
 
   @PostMapping("/login")
+  @ApiOperation(value = "Login using your email and password",
+          notes = "This will retrieve a Json Web Token, granting you access to the endpoints, you need to copy and paste" +
+                  " the JWT in the authorization section above the controllers, prepending the word Bearer before the token")
+  @ApiResponses(value = {
+          @ApiResponse(code = 400, message = "Invalid credentials"),
+          @ApiResponse(code = 404, message = "User not found")})
   public ResponseEntity<AuthenticationResponse> signIn(
       @RequestBody AuthenticationRequest authenticationRequest) {
 
