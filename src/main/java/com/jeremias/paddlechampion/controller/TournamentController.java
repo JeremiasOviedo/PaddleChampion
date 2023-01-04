@@ -9,6 +9,10 @@ import com.jeremias.paddlechampion.entity.TeamEntity;
 import com.jeremias.paddlechampion.entity.TeamTournament;
 import com.jeremias.paddlechampion.service.impl.TournamentServiceImpl;
 import java.util.List;
+
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -29,6 +33,11 @@ public class TournamentController {
 
   @PreAuthorize("hasAnyRole('USER','ADMIN')")
   @GetMapping("/{id}")
+  @ApiOperation(value = "Get a tournaments info",
+          notes = "This will retrieve all the information of the tournament")
+  @ApiResponses(value = {
+          @ApiResponse(code = 400, message = "Tournament ID is invalid (must use numbers value only)"),
+          @ApiResponse(code = 404, message = "Tournament not found")})
   public ResponseEntity<TournamentDto> getTournament(@PathVariable(name = "id") Long idTournament) {
 
     TournamentDto dto = tournamentService.getTournament(idTournament);
@@ -39,6 +48,11 @@ public class TournamentController {
 
   @PreAuthorize("hasAnyRole('USER','ADMIN')")
   @PostMapping("/create")
+  @ApiOperation(value = "Create a tournament",
+          notes = "Create the tournament filling the form")
+  @ApiResponses(value = {
+          @ApiResponse(code = 400, message = "Tournament name is already taken)"),
+          @ApiResponse(code = 404, message = "Not found")})
   public ResponseEntity<TournamentDto> createTournament(@RequestBody TournamentDto tournament) {
 
     TournamentDto dto = tournamentService.createTournament(tournament);
@@ -49,6 +63,11 @@ public class TournamentController {
 
   @PreAuthorize("hasAnyRole('USER','ADMIN')")
   @PostMapping("/{tournamentId}/addTeam/{teamId}")
+  @ApiOperation(value = "Add a team to the tournament",
+          notes = "Add a team to a tournament using their IDs")
+  @ApiResponses(value = {
+          @ApiResponse(code = 400, message = "Team or Tournament IDs are invalid (must use numbers value only)"),
+          @ApiResponse(code = 404, message = "Team or Tournament not found")})
   public ResponseEntity<String> addTeam(
       @PathVariable("tournamentId") Long tournamentId, @PathVariable("teamId") Long teamId) {
 
@@ -61,6 +80,12 @@ public class TournamentController {
 
   @PreAuthorize("hasAnyRole('USER','ADMIN')")
   @GetMapping("/{tournamentId}/matches")
+  @ApiOperation(value = "List all the tournament matches",
+          notes = "This will be retrieve all the tournament matches, if the list is empty , an algorithm" +
+                  " will be executed creating a round robin phase between all the teams")
+  @ApiResponses(value = {
+          @ApiResponse(code = 400, message = "Tournament ID is invalid (must use numbers value only)"),
+          @ApiResponse(code = 404, message = "Tournament not found")})
   public ResponseEntity<List<MatchBasicDto>> listMatches(@PathVariable Long tournamentId) {
 
     List<MatchBasicDto> fixture = tournamentService.listMatches(tournamentId);
@@ -70,6 +95,11 @@ public class TournamentController {
 
   @PreAuthorize("hasAnyRole('USER','ADMIN')")
   @GetMapping("/{tournamentId}/teams")
+  @ApiOperation(value = "List the teams",
+          notes = "this endpoint lists all the teams in the tournament")
+  @ApiResponses(value = {
+          @ApiResponse(code = 400, message = "Tournament ID is invalid (must use numbers value only)"),
+          @ApiResponse(code = 404, message = "Tournament not found")})
   public ResponseEntity<List<TeamDto>> listTeams(@PathVariable Long tournamentId) {
 
     List<TeamDto> teams = tournamentService.getTeamsDto(tournamentId);
@@ -80,6 +110,12 @@ public class TournamentController {
 
   @PreAuthorize("hasAnyRole('USER','ADMIN')")
   @GetMapping("/{tournamentId}/positions")
+  @ApiOperation(value = "Get the positions table",
+          notes = "This will execute an algorithm that gets all the matches that are finished" +
+                  " and update the positions table based on the results")
+  @ApiResponses(value = {
+          @ApiResponse(code = 400, message = "Tournament ID is invalid (must use numbers value only)"),
+          @ApiResponse(code = 404, message = "Tournament not found")})
   public ResponseEntity<List<TeamTournamentDto>> positions(@PathVariable Long tournamentId){
 
     List <TeamTournamentDto> positions = tournamentService.getPositionsTable(tournamentId);
