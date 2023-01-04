@@ -15,10 +15,14 @@ Restful API used to create paddle tournaments.
 <li>Spring Security with JWT</li>
 <li>JPA HIBERNATE</li>
 <li>Postman for endpoint testing</li>
+  <li>Swagger for documentation</li>
 <li>MySQL Workbench for DB visualization</li>
 </ul>
 
 *These are some functionalities i finished, i'm currently working and progressing in additional features*
+
+
+### :collision: :star2: I'm currently working on Swagger documentation, for the moment i will upload some postman images and describing the endpoints here  :star2: :collision:
 
 ## Registration 
 
