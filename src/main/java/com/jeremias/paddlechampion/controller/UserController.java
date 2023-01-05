@@ -2,15 +2,20 @@ package com.jeremias.paddlechampion.controller;
 
 import com.jeremias.paddlechampion.auth.dto.ResponseUserDto;
 import com.jeremias.paddlechampion.auth.dto.UserRegistrationDto;
+import com.jeremias.paddlechampion.dto.PageDto;
 import com.jeremias.paddlechampion.service.IUserService;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+
+import javax.servlet.http.HttpServletRequest;
 
 @RestController
 @RequestMapping("/user")
@@ -61,14 +66,24 @@ public class UserController {
             @ApiResponse(code = 404, message = "User not found")})
     public ResponseEntity<String> deleteUser(@PathVariable(name = "id") Long idUser) {
 
-      if (userService.delete(idUser)) {
-          return ResponseEntity.status(HttpStatus.OK).body("User deleted successfully");
-      } else {
+        if (userService.delete(idUser)) {
+            return ResponseEntity.status(HttpStatus.OK).body("User deleted successfully");
+        } else {
 
-          return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("User cannot be deleted");
-      }
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("User cannot be deleted");
+        }
 
+    }
 
+    @PreAuthorize("hasRole('ADMIN')")
+    @GetMapping("/listAll")
+    @ApiOperation(value = "List All Users",
+            notes = "Gives you a paginated list of all the users, only administrators can use this endpoint")
+    public ResponseEntity<PageDto<ResponseUserDto>> getAllUsers(@PageableDefault(size = 5) Pageable page,
+                                                                HttpServletRequest request) {
+
+        PageDto<ResponseUserDto> result = userService.listAllUsers(page, request);
+        return ResponseEntity.status(HttpStatus.OK).body(result);
     }
 
 }
