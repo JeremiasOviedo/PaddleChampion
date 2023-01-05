@@ -4,6 +4,7 @@ import com.jeremias.paddlechampion.entity.MatchEntity;
 import com.jeremias.paddlechampion.entity.TeamEntity;
 import com.jeremias.paddlechampion.entity.TeamTournament;
 import com.jeremias.paddlechampion.entity.TournamentEntity;
+import com.jeremias.paddlechampion.enumeration.Inscription;
 import com.jeremias.paddlechampion.mapper.exception.MaxTeamsException;
 import com.jeremias.paddlechampion.mapper.exception.ParamNotFound;
 import com.jeremias.paddlechampion.repository.TeamRepository;
@@ -30,13 +31,17 @@ public class TeamTournamentServiceImpl implements ITeamTournamentService {
     TournamentEntity tournament = tournamentRepo.findById(tournamentId).orElseThrow(
         () -> new ParamNotFound("Tournament ID is invalid"));
 
-    if (tournament
-        .getTeamTournaments()
-        .size() >= tournament.getMaxTeams()) {
+    if (tournament.getInscriptionStatus() == Inscription.CLOSED) {
+      throw new MaxTeamsException("The tournament inscription is closed");
+
+    } else if(tournament
+            .getTeamTournaments()
+            .size() >= tournament.getMaxTeams()) {
 
       throw new MaxTeamsException("The tournament is full, cant add more teams");
 
-    } else {
+    }
+    {
 
       TeamTournament teamTournament = new TeamTournament();
 

@@ -12,14 +12,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-@Service
 public interface IUserService {
 
-  List<UserDto> listAllUsers();
+  PageDto<ResponseUserDto> listAllUsers(Pageable page, HttpServletRequest request);
 
   ResponseUserDto getUser(Long id);
-
-  PageDto<ResponseUserDto> findAllUsers(Pageable pageable, HttpServletRequest request);
 
   boolean delete(Long id);
 
