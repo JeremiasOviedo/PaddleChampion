@@ -31,9 +31,11 @@ import com.jeremias.paddlechampion.service.IUtilService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.access.AuthorizationServiceException;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
+import javax.security.auth.message.AuthException;
 import javax.servlet.http.HttpServletRequest;
 
 @Service
@@ -88,6 +90,13 @@ public class TournamentServiceImpl implements ITournamentService {
 
         TournamentEntity tournament = tournamentRepo.findById(id).orElseThrow(
                 () -> new ParamNotFound("Tournament ID is invalid"));
+
+        String userEmail = SecurityContextHolder.getContext().getAuthentication().getName();
+        UserEntity user = userRepo.findByEmail(userEmail);
+
+        if(tournament.getUser() != user){
+            throw new AuthorizationServiceException("You don't have permission to do that");
+        }
 
         tournament.setInscriptionStatus(Inscription.CLOSED);
         createRoundRobin(id);

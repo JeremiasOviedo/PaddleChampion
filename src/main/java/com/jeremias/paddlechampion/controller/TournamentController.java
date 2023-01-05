@@ -71,6 +71,21 @@ public class TournamentController {
 
 
     }
+    @PreAuthorize("hasAnyRole('USER','ADMIN')")
+    @GetMapping("/{id}/start")
+    @ApiOperation(value = "Get a tournaments info",
+            notes = "This will retrieve all the information of the tournament")
+    @ApiResponses(value = {
+            @ApiResponse(code = 400, message = "Tournament ID is invalid (must use numbers value only)"),
+            @ApiResponse(code = 404, message = "Tournament not found")})
+    public ResponseEntity<TournamentDto> startTournament(@PathVariable(name = "id") Long idTournament) {
+
+        tournamentService.startTournament(idTournament);
+        TournamentDto dto = tournamentService.getTournament(idTournament);
+
+        return ResponseEntity.status(HttpStatus.OK).body(dto);
+
+    }
 
     @PreAuthorize("hasAnyRole('USER','ADMIN')")
     @GetMapping("/{tournamentId}/matches")
@@ -80,9 +95,9 @@ public class TournamentController {
             @ApiResponse(code = 400, message = "Tournament ID is invalid (must use numbers value only)"),
             @ApiResponse(code = 404, message = "Tournament not found")})
     public ResponseEntity<PageDto<MatchBasicDto>> listMatches(@PageableDefault(size = 10) Pageable page, HttpServletRequest request,
-                                                              @PathVariable Long id) {
+                                                              @PathVariable Long tournamentId) {
 
-        PageDto<MatchBasicDto> matches = tournamentService.listMatches(page, request, id);
+        PageDto<MatchBasicDto> matches = tournamentService.listMatches(page, request, tournamentId);
 
         return ResponseEntity.status(HttpStatus.CREATED).body(matches);
     }
