@@ -22,7 +22,13 @@ public class SwaggerConfig {
 
     private ApiInfo apiInfo() {
         return new ApiInfo("Paddle Champion",
-                "Create awesome paddle tournaments",
+                "Create awesome paddle tournaments" + '\n' +
+                        "How to test the endpoints:" + '\n' +
+                        "- Create an account and login in the authentication controller " + '\n' +
+                        "- The login will retrieve a Json Web Token, copy and paste the token in the " +
+                        "'Authorize' button prepending the word Bearer with an space between them" + '\n' +
+                        "- Example: Bearer jsncj18fmv0017ekfm18732ui"
+                ,
                 "1.0",
                 "Terms of service",
                 new Contact("Jeremias Oviedo", "jeremiasoviedo.github.io", "jeremiasoviedo.dev@gmail.com"),
