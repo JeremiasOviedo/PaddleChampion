@@ -1,4 +1,4 @@
-# PaddleChampion
+PaddleChampion 
 
 ![PaddleChampion-Logo](https://jeremiasoviedo.github.io/images/logo-no-background.png)
 Restful API used to create paddle tournaments.
@@ -15,16 +15,25 @@ Restful API used to create paddle tournaments.
 <li>Spring Security with JWT</li>
 <li>JPA HIBERNATE</li>
 <li>Postman for endpoint testing</li>
-  <li>Swagger for documentation</li>
+ <li>Swagger for documentation</li>
 <li>MySQL Workbench for DB visualization</li>
 </ul>
 
 
 
 
-### :collision: :star2: I'm currently working on Swagger documentation, for the moment i will upload some postman images and describing the endpoints here  :star2: :collision:
+# :star2: Swagger documentation: :star2: 
+## You can test the endpoints <a href = "https://paddlechampion-production.up.railway.app/swagger-ui/index.html" target= "_blank">here</a>:arrow_backward::arrow_backward:
 
-*These are some functionalities i finished*
+## How to test endpoints
+<ol>
+<li>Create an account using the auth/register or auth/registeradmin endpoints.</li>
+<li>Login into your account using the auth/login endpoint.</li>
+<li>If your credentials are correct you will recieve a Json Web Token</li>
+<li>Go to the button that says authorize and paste the JWT prepending the word Bearer with a space between them</li>
+<li>Now you can access to all the endpoints</li>
+</ol>
+
 ## Registration 
 
 I implemented Spring Security with JWT, you need to create a user and login to get full access to the endpoints
@@ -98,9 +107,6 @@ When a match is finished you can load the result, this will automatically set th
 I created an algorithm that get all the matches in the tournament with the Status FINISHED and makes a positions table based on the results.
 
 ![Positions-Table](https://i.imgur.com/sBENh2n.png)
-
-
-
 # TO DO--
 So far this is what ive done with this API, im currently working on it and learning new things every day.
 Some of the next features i need to add are:
