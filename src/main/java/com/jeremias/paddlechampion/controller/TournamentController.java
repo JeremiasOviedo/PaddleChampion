@@ -28,7 +28,7 @@ public class TournamentController {
     @PreAuthorize("hasAnyRole('USER','ADMIN')")
     @GetMapping("/{id}")
     @ApiOperation(value = "Get a tournaments info",
-            notes = "This will retrieve all the information of the tournament")
+            notes = "This will retrieve all the information of a tournament")
     @ApiResponses(value = {
             @ApiResponse(code = 400, message = "Tournament ID is invalid (must use numbers value only)"),
             @ApiResponse(code = 404, message = "Tournament not found")})
@@ -58,7 +58,7 @@ public class TournamentController {
     @PreAuthorize("hasAnyRole('USER','ADMIN')")
     @PostMapping("/{tournamentId}/addTeam/{teamId}")
     @ApiOperation(value = "Add a team to the tournament",
-            notes = "Add a team to a tournament using their IDs")
+            notes = "Add a team to a tournament using their IDs. For the moment, everyone can add any team to any tournament")
     @ApiResponses(value = {
             @ApiResponse(code = 400, message = "Team or Tournament IDs are invalid (must use numbers value only)"),
             @ApiResponse(code = 404, message = "Team or Tournament not found")})
@@ -73,8 +73,8 @@ public class TournamentController {
     }
     @PreAuthorize("hasAnyRole('USER','ADMIN')")
     @GetMapping("/{id}/start")
-    @ApiOperation(value = "Get a tournaments info",
-            notes = "This will retrieve all the information of the tournament")
+    @ApiOperation(value = "Start the tournament",
+            notes = "This will start the tournament, closing the inscription and creating the round robin phase")
     @ApiResponses(value = {
             @ApiResponse(code = 400, message = "Tournament ID is invalid (must use numbers value only)"),
             @ApiResponse(code = 404, message = "Tournament not found")})
